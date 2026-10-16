@@ -5,28 +5,66 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Shaistanaya City</title>
 <style>
-  body { font-family: system-ui, sans-serif; margin: 0; padding: 2rem; color: #222; }
+  :root { --ink:#1c1c28; --muted:#7c7c8a; --accent:#5b6cf0; }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0; padding: 2rem; color: var(--ink); background:#f4f4f8; min-height: 100vh; }
+
   #chat-toggle {
-    position: fixed; right: 20px; bottom: 20px; width: 56px; height: 56px;
-    border: 0; border-radius: 50%; background: #2563eb; color: #fff;
-    font-size: 24px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,.25);
+    position: fixed; right: 20px; bottom: 20px; width: 60px; height: 60px; border: 0; border-radius: 50%;
+    background: #fff; cursor: pointer; font-size: 26px; z-index: 20;
+    box-shadow: 0 8px 24px rgba(60,60,120,.25);
+    background: radial-gradient(circle at 30% 30%, #fff, #e9ecff);
   }
+
   #chat-box {
-    position: fixed; right: 20px; bottom: 90px; width: 340px; max-width: calc(100vw - 40px);
-    height: 460px; max-height: calc(100vh - 120px); display: none; flex-direction: column;
-    background: #fff; border: 1px solid #ddd; border-radius: 12px; overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    position: fixed; right: 20px; bottom: 92px; z-index: 20;
+    width: 360px; max-width: calc(100vw - 32px); height: 560px; max-height: calc(100vh - 116px);
+    display: none; flex-direction: column; overflow: hidden; isolation: isolate;
+    background: #fff; border-radius: 36px;
+    box-shadow: 0 24px 60px rgba(40,40,100,.22), 0 0 0 1px rgba(0,0,0,.04);
   }
   #chat-box.open { display: flex; }
-  #chat-header { background: #2563eb; color: #fff; padding: 12px 16px; font-weight: 600; }
-  #chat-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; background: #f8fafc; }
-  .msg { max-width: 85%; padding: 8px 12px; border-radius: 12px; font-size: 14px; line-height: 1.4; white-space: pre-wrap; word-wrap: break-word; }
-  .msg.user { align-self: flex-end; background: #2563eb; color: #fff; }
-  .msg.bot { align-self: flex-start; background: #e5e7eb; color: #111; }
-  #chat-form { display: flex; border-top: 1px solid #ddd; }
-  #chat-input { flex: 1; border: 0; padding: 12px; font-size: 14px; outline: none; }
-  #chat-send { border: 0; background: #2563eb; color: #fff; padding: 0 16px; cursor: pointer; }
-  #chat-send:disabled { opacity: .5; cursor: default; }
+
+  /* glow pastel di bagian bawah */
+  #chat-box::before {
+    content: ""; position: absolute; inset: 30% -20% -25% -20%; z-index: -1; filter: blur(38px); opacity: .9;
+    background:
+      radial-gradient(40% 45% at 12% 55%, #ffd0d6 0, transparent 70%),
+      radial-gradient(38% 45% at 30% 85%, #c9f5d0 0, transparent 70%),
+      radial-gradient(40% 45% at 70% 80%, #cfd4ff 0, transparent 70%),
+      radial-gradient(35% 40% at 92% 45%, #ffc9cf 0, transparent 70%),
+      radial-gradient(35% 40% at 55% 45%, #fff3c8 0, transparent 70%);
+  }
+
+  #chat-head { padding: 26px 28px 8px; position: relative; }
+  #chat-head h2 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -.3px; }
+  #chat-head p { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+  #chat-close { position: absolute; right: 20px; top: 20px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: rgba(0,0,0,.05); color: var(--muted); cursor: pointer; font-size: 16px; }
+
+  #chat-body { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 22px; }
+  #hello { margin-top: auto; padding: 0 6px 14px; }
+  #hello h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; font-size: 28px; line-height: 1.15; margin: 0 0 16px; letter-spacing: -.5px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { border: 0; cursor: pointer; font: inherit; font-size: 13px; color: #44444f; padding: 9px 15px; border-radius: 999px; background: rgba(255,255,255,.65); backdrop-filter: blur(6px); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+  .chip:hover { background: #fff; }
+
+  #chat-messages { flex: 1; min-height: 0; overflow-y: auto; display: none; flex-direction: column; gap: 8px; padding: 10px 2px 12px; scrollbar-width: thin; }
+  #chat-box.started #chat-messages { display: flex; }
+  #chat-box.started #hello { display: none; }
+  .msg { max-width: 86%; padding: 10px 14px; border-radius: 20px; font-size: 14px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .msg.user { align-self: flex-end; background: var(--ink); color: #fff; border-bottom-right-radius: 6px; }
+  .msg.bot { align-self: flex-start; background: rgba(255,255,255,.85); box-shadow: 0 1px 3px rgba(0,0,0,.08); border-bottom-left-radius: 6px; }
+
+  #chat-form { display: flex; gap: 10px; align-items: center; padding: 8px 22px 22px; }
+  #chat-input { flex: 1; min-width: 0; border: 0; outline: none; font: inherit; font-size: 15px; padding: 0 22px; height: 56px; border-radius: 999px; background: rgba(255,255,255,.9); box-shadow: 0 2px 10px rgba(60,60,120,.1); color: var(--ink); }
+  #chat-input::placeholder { color: #9a9aa6; }
+  #chat-btn { flex: none; width: 56px; height: 56px; border: 0; border-radius: 50%; cursor: pointer; background: rgba(255,255,255,.9); box-shadow: 0 2px 10px rgba(60,60,120,.1); color: var(--accent); display: grid; place-items: center; }
+  #chat-btn.rec { background: #ff5a6a; color: #fff; }
+  #chat-btn:disabled { opacity: .5; cursor: default; }
+  #chat-btn svg { width: 22px; height: 22px; fill: currentColor; }
+  .dots span { display:inline-block; width:6px; height:6px; margin:0 2px; border-radius:50%; background:#9a9aa6; animation: b 1s infinite; }
+  .dots span:nth-child(2){animation-delay:.15s} .dots span:nth-child(3){animation-delay:.3s}
+  @keyframes b { 0%,80%,100%{opacity:.3} 40%{opacity:1} }
 </style>
 </head>
 <body>
@@ -34,12 +72,28 @@
 <p>Konten website di sini. Widget chat ada di pojok kanan bawah.</p>
 
 <button id="chat-toggle" aria-label="Buka chat">💬</button>
-<div id="chat-box" role="dialog" aria-label="Chat">
-  <div id="chat-header">Shaistanaya City</div>
-  <div id="chat-messages"></div>
+<div id="chat-box" role="dialog" aria-label="Chat Shaistanaya City">
+  <div id="chat-head">
+    <h2>Shaistanaya City</h2>
+    <p>Asisten virtual Cozy Urban Living.</p>
+    <button id="chat-close" aria-label="Tutup chat">✕</button>
+  </div>
+  <div id="chat-body">
+    <div id="chat-messages"></div>
+    <div id="hello">
+      <h3>Ada yang bisa<br>kami bantu?</h3>
+      <div class="chips">
+        <button class="chip" type="button">Tipe rumah</button>
+        <button class="chip" type="button">Promo Octoboo</button>
+        <button class="chip" type="button">Lokasi &amp; akses</button>
+        <button class="chip" type="button">Bisa KPR?</button>
+        <button class="chip" type="button">Jadwalkan survey</button>
+      </div>
+    </div>
+  </div>
   <form id="chat-form">
-    <input id="chat-input" type="text" maxlength="2000" placeholder="Ketik pesan..." autocomplete="off">
-    <button id="chat-send" type="submit">Kirim</button>
+    <input id="chat-input" type="text" maxlength="2000" placeholder="Tanya sesuatu..." autocomplete="off">
+    <button id="chat-btn" type="button" aria-label="Bicara"></button>
   </form>
 </div>
 
@@ -49,16 +103,16 @@
   const list = document.getElementById("chat-messages");
   const form = document.getElementById("chat-form");
   const input = document.getElementById("chat-input");
-  const send = document.getElementById("chat-send");
+  const btn = document.getElementById("chat-btn");
   const history = [];
+  let busy = false;
 
-  document.getElementById("chat-toggle").onclick = () => {
-    box.classList.toggle("open");
-    if (box.classList.contains("open")) {
-      if (!list.children.length) add("bot", "Halo, Kak! Selamat datang di Shaistanaya City. Ada yang bisa kami bantu?");
-      input.focus();
-    }
-  };
+  const ICON_MIC = '<svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2z"/></svg>';
+  const ICON_SEND = '<svg viewBox="0 0 24 24"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12 2-12 2z"/></svg>';
+
+  const toggle = () => { box.classList.toggle("open"); if (box.classList.contains("open")) input.focus(); };
+  document.getElementById("chat-toggle").onclick = toggle;
+  document.getElementById("chat-close").onclick = toggle;
 
   function add(role, text) {
     const el = document.createElement("div");
@@ -69,15 +123,14 @@
     return el;
   }
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const text = input.value.trim();
-    if (!text) return;
-    input.value = "";
+  async function ask(text) {
+    if (busy || !text) return;
+    busy = true;
+    box.classList.add("started");
     add("user", text);
     history.push({ role: "user", content: text });
-    send.disabled = true;
-    const typing = add("bot", "...");
+    const typing = add("bot", "");
+    typing.innerHTML = '<span class="dots"><span></span><span></span><span></span></span>';
     try {
       const r = await fetch(API_URL, {
         method: "POST",
@@ -92,10 +145,44 @@
       typing.textContent = err.message || "Maaf, terjadi kesalahan.";
       history.pop(); // buang pesan user yang gagal agar riwayat tetap valid
     } finally {
-      send.disabled = false;
-      input.focus();
+      busy = false;
+      list.scrollTop = list.scrollHeight;
     }
-  });
+  }
+
+  document.querySelectorAll(".chip").forEach((c) => (c.onclick = () => ask(c.textContent)));
+
+  // Tombol bulat: mikrofon saat kosong, kirim saat ada teks
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let rec = null;
+  function syncBtn() {
+    const hasText = input.value.trim().length > 0;
+    btn.innerHTML = hasText || !SR ? ICON_SEND : ICON_MIC;
+    btn.setAttribute("aria-label", hasText || !SR ? "Kirim" : "Bicara");
+  }
+  input.addEventListener("input", syncBtn);
+  syncBtn();
+
+  function submit() {
+    const text = input.value.trim();
+    input.value = "";
+    syncBtn();
+    ask(text);
+  }
+  form.addEventListener("submit", (e) => { e.preventDefault(); submit(); });
+
+  btn.onclick = () => {
+    if (input.value.trim() || !SR) return submit();
+    if (rec) { rec.stop(); return; }
+    rec = new SR();
+    rec.lang = "id-ID";
+    rec.interimResults = false;
+    rec.onstart = () => btn.classList.add("rec");
+    rec.onresult = (e) => { input.value = e.results[0][0].transcript; syncBtn(); submit(); };
+    rec.onend = () => { btn.classList.remove("rec"); rec = null; };
+    rec.onerror = () => {};
+    rec.start();
+  };
 </script>
 </body>
 </html>
