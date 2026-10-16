@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chatbot Demo</title>
+<title>Shaistanaya City</title>
 <style>
   body { font-family: system-ui, sans-serif; margin: 0; padding: 2rem; color: #222; }
   #chat-toggle {
@@ -35,7 +35,7 @@
 
 <button id="chat-toggle" aria-label="Buka chat">💬</button>
 <div id="chat-box" role="dialog" aria-label="Chat">
-  <div id="chat-header">Tanya Kami</div>
+  <div id="chat-header">Shaistanaya City</div>
   <div id="chat-messages"></div>
   <form id="chat-form">
     <input id="chat-input" type="text" maxlength="2000" placeholder="Ketik pesan..." autocomplete="off">
@@ -55,7 +55,7 @@
   document.getElementById("chat-toggle").onclick = () => {
     box.classList.toggle("open");
     if (box.classList.contains("open")) {
-      if (!list.children.length) add("bot", "Halo! Ada yang bisa kami bantu?");
+      if (!list.children.length) add("bot", "Halo, Kak! Selamat datang di Shaistanaya City. Ada yang bisa kami bantu?");
       input.focus();
     }
   };
