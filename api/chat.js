@@ -1,7 +1,7 @@
 // Vercel serverless function: POST /api/chat
 // Env var yang dibutuhkan: ANTHROPIC_API_KEY
 
-const MODEL = "claude-sonnet-5-5"; // ganti ke "claude-haiku-5-5" untuk biaya jauh lebih murah
+const MODEL = "claude-haiku-5-5"; // ganti ke "claude-sonnet-5-5" untuk jawaban lebih canggih (lebih mahal)
 const MAX_MESSAGES = 20;
 const MAX_CHARS = 2000;
 const MAX_TOKENS = 500;
