@@ -40,6 +40,10 @@ FAKTA INTI
 - Shaistanaya City, Jl. Sidodadi, Sudio, Sidodadi, Kec. Candi, Sidoarjo. Dua cluster: Montana (American Style) dan Sierra (Scandinavian Contemporary), plus ruko. Cluster Dakota akan hadir.
 - Harga rumah mulai Rp600 juta (Cluster Montana). Harga Sierra dan pricelist: arahkan ke marketing, jangan menyebut angka.
 - Promo Octoboo berlaku sampai 31 Oktober 2026, syarat dan ketentuan berlaku.
+- Montana: tipe Gwen, New Gwen, Angeline, Darlene. Semua 2 kamar tidur, 1 kamar mandi, carport 2 mobil, mezzanine di Angeline dan Darlene.
+- Sierra: tipe Arnica dan Bianca. Rumah 2 lantai, 3 kamar tidur, 2 kamar mandi, ada balcony; private pool hanya di unit terpilih.
+- Fasilitas: one gate system, CCTV 24 jam, masjid, playground, outdoor gym, lapangan basket, BBQ pit, hangout garden.
+- Kalau pertanyaan tidak menyebut cluster (misalnya "berapa kamarnya"), jawab untuk kedua cluster sekaligus lalu tanyakan mana yang diminati.
 
 CARA MENJAWAB
 Pesan sistem berikutnya (jika ada) berisi DATA RELEVAN yang diambil khusus untuk pertanyaan pengunjung. Jawab hanya dari FAKTA INTI dan DATA RELEVAN itu. Jika jawabannya tidak ada di sana, jangan menebak: arahkan ke tim marketing lewat WhatsApp. Untuk sapaan atau obrolan ringan, jawab ramah lalu tanyakan kebutuhan pengunjung.`;
@@ -121,7 +125,10 @@ async function checkRateLimit(req) {
 
 // Ambil entri knowledge base yang relevan dengan percakapan. Gagal = lanjut tanpa data tambahan.
 async function retrieveKnowledge(messages) {
-  if (!SUPABASE_URL || !SUPABASE_KEY) return "";
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    console.warn("SUPABASE_URL / SUPABASE_ANON_KEY belum diisi: knowledge base tidak dipakai.");
+    return { text: "", status: "disabled" };
+  }
   const q = messages
     .filter((m) => m.role === "user")
     .slice(-2)
@@ -141,13 +148,16 @@ async function retrieveKnowledge(messages) {
     });
     if (!r.ok) {
       console.error("KB search error", r.status);
-      return "";
+      return { text: "", status: `error-${r.status}` };
     }
     const rows = await r.json();
-    return rows.map((k) => `## ${k.title}\n${k.content}`).join("\n\n");
+    return {
+      text: rows.map((k) => `## ${k.title}\n${k.content}`).join("\n\n"),
+      status: `ok-${rows.length}`,
+    };
   } catch (err) {
     console.error("KB search error", err);
-    return "";
+    return { text: "", status: "error-network" };
   } finally {
     clearTimeout(timer);
   }
@@ -191,7 +201,8 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Pesan tidak valid." });
   }
 
-  const knowledge = await retrieveKnowledge(messages);
+  const { text: knowledge, status: kbStatus } = await retrieveKnowledge(messages);
+  res.setHeader("X-KB-Status", kbStatus); // untuk diagnosis: lihat di tab Network browser
   const system = [
     { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
   ];
