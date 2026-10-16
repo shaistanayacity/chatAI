@@ -28,5 +28,6 @@ Centang Production dan Preview, lalu Redeploy.
 Jika Supabase tidak terjangkau, bot tetap menjawab memakai FAKTA INTI di prompt dan mengarahkan sisanya ke WhatsApp.
 
 ## Catatan
+- Tabel `chatbot_kb` di Supabase adalah sumber kebenaran. File `supabase/seed_*.sql` hanya isi awal; pembaruan setelahnya (USP, bank rekanan, entri pengetahuan umum, dan sebagainya) dilakukan langsung di database.
 - Promo Octoboo berakhir 31 Oktober 2026: perbarui baris kategori `promo` dan FAKTA INTI.
 - Model: `claude-haiku-5-5` (ubah konstanta `MODEL` untuk Sonnet).
