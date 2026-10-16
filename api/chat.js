@@ -34,7 +34,7 @@ const LIMIT_PER_DAY = 60;
 const LIMIT_GLOBAL_PER_DAY = 3000; // pengaman total biaya per hari
 
 // Batas harian pencarian web (setiap pencarian ditagih, sekitar Rp180). Lewat batas = bot menjawab tanpa web.
-const WEB_LIMIT_PER_IP_DAY = Number(process.env.WEB_LIMIT_PER_IP_DAY) || 10;
+const WEB_LIMIT_PER_IP_DAY = Number(process.env.WEB_LIMIT_PER_IP_DAY) || 5;
 const WEB_LIMIT_GLOBAL_DAY = Number(process.env.WEB_LIMIT_GLOBAL_DAY) || 300;
 
 const SYSTEM_PROMPT = `Kamu adalah asisten virtual Shaistanaya City (tagline: Cozy Urban Living), perumahan modern di pusat Kota Sidoarjo. Tugasmu membantu calon pembeli dan mengarahkan mereka ke survey atau tim marketing.
