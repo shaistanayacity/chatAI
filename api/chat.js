@@ -33,6 +33,10 @@ const LIMIT_PER_MINUTE = 10;
 const LIMIT_PER_DAY = 60;
 const LIMIT_GLOBAL_PER_DAY = 3000; // pengaman total biaya per hari
 
+// Batas harian pencarian web (setiap pencarian ditagih, sekitar Rp180). Lewat batas = bot menjawab tanpa web.
+const WEB_LIMIT_PER_IP_DAY = Number(process.env.WEB_LIMIT_PER_IP_DAY) || 5;
+const WEB_LIMIT_GLOBAL_DAY = Number(process.env.WEB_LIMIT_GLOBAL_DAY) || 10;
+
 const SYSTEM_PROMPT = `Kamu adalah asisten virtual Shaistanaya City (tagline: Cozy Urban Living), perumahan modern di pusat Kota Sidoarjo. Tugasmu membantu calon pembeli dan mengarahkan mereka ke survey atau tim marketing.
 
 GAYA BAHASA (kamu ngobrol lewat chat, bukan menulis brosur)
@@ -97,14 +101,14 @@ const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_
 const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
 const memory = new Map(); // key -> { count, expires }
 
-function memoryHit(key, ttl) {
+function memoryHit(key, ttl, n = 1) {
   const now = Date.now();
   if (memory.size > 5000) {
     for (const [k, v] of memory) if (v.expires <= now) memory.delete(k);
   }
   let e = memory.get(key);
   if (!e || e.expires <= now) e = { count: 0, expires: now + ttl * 1000 };
-  e.count += 1;
+  e.count += n;
   memory.set(key, e);
   return e.count;
 }
@@ -131,6 +135,40 @@ async function hitAll(checks) {
     }
   }
   return checks.map(([key, ttl]) => memoryHit(key, ttl));
+}
+
+// --- Hitungan pencarian web harian ---------------------------------------
+async function redisPipeline(cmds) {
+  if (!(REDIS_URL && REDIS_TOKEN)) return null;
+  try {
+    const r = await fetch(`${REDIS_URL}/pipeline`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${REDIS_TOKEN}` },
+      body: JSON.stringify(cmds),
+    });
+    if (r.ok) return await r.json();
+    console.error("Redis error", r.status);
+  } catch (err) {
+    console.error("Redis error", err);
+  }
+  return null;
+}
+
+async function readCounts(keys) {
+  const out = await redisPipeline(keys.map((k) => ["GET", k]));
+  if (out) return keys.map((_, i) => Number(out[i].result) || 0);
+  const now = Date.now();
+  return keys.map((k) => {
+    const e = memory.get(k);
+    return e && e.expires > now ? e.count : 0;
+  });
+}
+
+async function addToCounts(items) {
+  const out = await redisPipeline(
+    items.flatMap(([key, ttl, n]) => [["INCRBY", key, n], ["EXPIRE", key, ttl, "NX"]])
+  );
+  if (!out) items.forEach(([key, ttl, n]) => memoryHit(key, ttl, n));
 }
 
 function clientIp(req) {
@@ -280,12 +318,24 @@ export default async function handler(req, res) {
       });
 
     let useTools = WEB_RESEARCH && !webUnsupported;
+    let webStatus = useTools ? "on" : "off";
+    const day = new Date().toISOString().slice(0, 10);
+    const webKeys = [`rl:web:${clientIp(req)}:${day}`, `rl:webglobal:${day}`];
+    if (useTools) {
+      const [ipUsed, globalUsed] = await readCounts(webKeys);
+      if (ipUsed >= WEB_LIMIT_PER_IP_DAY || globalUsed >= WEB_LIMIT_GLOBAL_DAY) {
+        useTools = false; // batas harian pencarian web tercapai: jawab tanpa web
+        webStatus = "limit";
+      }
+    }
+    let searches = 0;
     let convo = messages;
     let r = await call(useTools, convo);
     // Alat web ditolak (model/akun tidak mendukung): ulangi tanpa web agar chat tetap jalan.
     if (!r.ok && useTools && r.status === 400) {
       console.error("Web research ditolak, lanjut tanpa web:", await r.text());
       useTools = false;
+      webStatus = "off";
       r = await call(useTools, convo);
       if (r.ok) webUnsupported = true; // masalahnya memang di alat web, bukan di isi pesan
     }
@@ -299,11 +349,18 @@ export default async function handler(req, res) {
           .json({ error: "Maaf, layanan sedang sibuk. Coba lagi sebentar." });
       }
       data = await r.json();
+      searches += (data.content || []).filter((b) => b.type === "server_tool_use" && b.name === "web_search").length;
       // Pencarian panjang dijeda server: lanjutkan dengan mengirim balik jawaban sementara.
       if (data.stop_reason !== "pause_turn" || i >= MAX_CONTINUATIONS) break;
       convo = [...convo, { role: "assistant", content: data.content }];
       r = await call(useTools, convo);
     }
+
+    if (searches > 0) {
+      await addToCounts([[webKeys[0], 86400, searches], [webKeys[1], 86400, searches]]);
+      webStatus = `used-${searches}`;
+    }
+    res.setHeader("X-Web-Status", webStatus); // on, off, limit, atau used-N (untuk diagnosis)
 
     // Ambil hanya teks setelah blok alat terakhir (teks sebelum mencari tidak ditampilkan).
     const blocks = data.content || [];

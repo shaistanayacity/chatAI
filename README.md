@@ -28,7 +28,7 @@ Centang Production dan Preview, lalu Redeploy.
 Jika Supabase tidak terjangkau, bot tetap menjawab memakai FAKTA INTI di prompt dan mengarahkan sisanya ke WhatsApp.
 
 ## Riset web
-Bot punya alat pencarian web dan pembaca halaman `shaistanayacity.com` (Claude API server tools), dipakai hanya bila jawaban tidak ada di knowledge base: maksimal 2 pencarian dan 2 pembacaan per pesan. Aturan pemakaiannya ada di bagian RISET WEB pada `SYSTEM_PROMPT` (tidak untuk harga, promo, ketersediaan, legalitas, atau aturan kawasan). Matikan dengan env var `WEB_RESEARCH=off`. Jika API menolak alat web, bot otomatis lanjut tanpa web (lihat log Vercel: "Web research ditolak").
+Bot punya alat pencarian web dan pembaca halaman `shaistanayacity.com` (Claude API server tools), dipakai hanya bila jawaban tidak ada di knowledge base: maksimal 2 pencarian dan 2 pembacaan per pesan. Aturan pemakaiannya ada di bagian RISET WEB pada `SYSTEM_PROMPT` (tidak untuk harga, promo, ketersediaan, legalitas, atau aturan kawasan). Setiap pencarian ditagih (sekitar Rp180), jadi ada batas harian: 5 pencarian per pengunjung dan 10 per hari total (ubah lewat env `WEB_LIMIT_PER_IP_DAY` dan `WEB_LIMIT_GLOBAL_DAY`). Lewat batas, bot tetap menjawab tetapi tanpa web (header `X-Web-Status: limit`). Matikan seluruhnya dengan env var `WEB_RESEARCH=off`. Jika API menolak alat web, bot otomatis lanjut tanpa web (lihat log Vercel: "Web research ditolak").
 
 ## Catatan
 - Tabel `chatbot_kb` di Supabase adalah sumber kebenaran. File `supabase/seed_*.sql` hanya isi awal; pembaruan setelahnya (USP, bank rekanan, entri pengetahuan umum, dan sebagainya) dilakukan langsung di database.
