@@ -36,10 +36,15 @@
       radial-gradient(35% 40% at 55% 45%, #fff3c8 0, transparent 70%);
   }
 
-  #chat-head { padding: 26px 28px 8px; position: relative; }
-  #chat-head h2 { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -.3px; }
-  #chat-head p { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
-  #chat-close { position: absolute; right: 20px; top: 20px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: rgba(0,0,0,.05); color: var(--muted); cursor: pointer; font-size: 16px; }
+  #chat-head { display: flex; align-items: center; gap: 12px; padding: 20px 20px 10px 22px; }
+  #avatar { position: relative; flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 600; font-size: 18px; background: linear-gradient(135deg, #f6a6b2, #8f9bff); box-shadow: 0 2px 8px rgba(80,80,160,.25); }
+  #avatar::after { content: ""; position: absolute; right: 0; bottom: 0; width: 11px; height: 11px; border-radius: 50%; background: #2fc86b; border: 2px solid #fff; }
+  #who { flex: 1; min-width: 0; }
+  #who b { display: block; font-size: 15px; font-weight: 600; line-height: 1.2; }
+  #who span { display: block; font-size: 12.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hbtn { border: 0; cursor: pointer; font: inherit; font-size: 12.5px; color: #44444f; background: rgba(0,0,0,.05); border-radius: 999px; height: 32px; padding: 0 12px; }
+  .hbtn:hover { background: rgba(0,0,0,.09); }
+  #chat-close { width: 32px; padding: 0; font-size: 14px; color: var(--muted); }
 
   #chat-body { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 22px; }
   #hello { margin-top: auto; padding: 0 6px 14px; }
@@ -74,14 +79,15 @@
 <button id="chat-toggle" aria-label="Buka chat">💬</button>
 <div id="chat-box" role="dialog" aria-label="Chat Shaistanaya City">
   <div id="chat-head">
-    <h2>Shaistanaya City</h2>
-    <p>Halo, saya Ajeng, ada yang bisa dibantu?</p>
-    <button id="chat-close" aria-label="Tutup chat">✕</button>
+    <div id="avatar" aria-hidden="true">A</div>
+    <div id="who"><b>Ajeng</b><span>Asisten virtual · Online</span></div>
+    <button id="chat-new" class="hbtn" type="button">Sesi baru</button>
+    <button id="chat-close" class="hbtn" type="button" aria-label="Tutup chat">✕</button>
   </div>
   <div id="chat-body">
     <div id="chat-messages"></div>
     <div id="hello">
-      <h3>Ada yang bisa<br>kami bantu?</h3>
+      <h3>Halo, saya Ajeng.<br>Ada yang bisa dibantu?</h3>
       <div class="chips">
         <button class="chip" type="button">Tipe rumah</button>
         <button class="chip" type="button">Promo Octoboo</button>
@@ -113,6 +119,13 @@
   const toggle = () => { box.classList.toggle("open"); if (box.classList.contains("open")) input.focus(); };
   document.getElementById("chat-toggle").onclick = toggle;
   document.getElementById("chat-close").onclick = toggle;
+  document.getElementById("chat-new").onclick = () => {
+    if (busy) return;
+    history.length = 0;
+    list.textContent = "";
+    box.classList.remove("started");
+    input.focus();
+  };
 
   function add(role, text) {
     const el = document.createElement("div");
