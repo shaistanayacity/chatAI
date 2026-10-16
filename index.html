@@ -154,6 +154,12 @@
   }
 
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  // Jeda "mengetik" agar terasa seperti manusia. Ubah angka ini untuk lebih cepat/lambat.
+  const TYPE_BASE_MS = 1200;     // jeda minimum sebelum bubble muncul
+  const TYPE_PER_CHAR_MS = 45;   // tambahan per karakter
+  const TYPE_MAX_MS = 4500;      // batas jeda per bubble
+  const GAP_BETWEEN_MS = 500;    // napas antar bubble
+  const typeDelay = (t) => Math.min(TYPE_MAX_MS, TYPE_BASE_MS + t.length * TYPE_PER_CHAR_MS);
   function typingBubble() {
     const el = add("bot", "");
     el.innerHTML = '<span class="dots"><span></span><span></span><span></span></span>';
@@ -173,6 +179,7 @@
     add("user", text);
     history.push({ role: "user", content: text });
     let typing = typingBubble();
+    const startedAt = Date.now();
     try {
       const r = await fetch(API_URL, {
         method: "POST",
@@ -184,10 +191,12 @@
       const parts = splitReply(data.reply);
       for (let i = 0; i < parts.length; i++) {
         if (i > 0) {
+          await sleep(GAP_BETWEEN_MS);
           typing = typingBubble();
-          await sleep(Math.min(1800, 600 + parts[i].length * 18));
+          await sleep(typeDelay(parts[i]));
         } else {
-          await sleep(300);
+          // waktu menunggu server dihitung sebagai bagian dari jeda mengetik
+          await sleep(Math.max(0, typeDelay(parts[i]) - (Date.now() - startedAt)));
         }
         setText(typing, parts[i]);
         list.scrollTop = list.scrollHeight;
