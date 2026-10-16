@@ -49,14 +49,13 @@
   #chat-close { width: 32px; padding: 0; font-size: 14px; color: var(--muted); }
 
   #chat-body { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 22px; }
-  #hello { margin-top: auto; padding: 0 6px 14px; }
+  #hello { padding: 0 2px 12px; }
   #hello h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; font-size: 28px; line-height: 1.15; margin: 0 0 16px; letter-spacing: -.5px; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip { border: 0; cursor: pointer; font: inherit; font-size: 13px; color: #44444f; padding: 9px 15px; border-radius: 999px; background: rgba(255,255,255,.65); backdrop-filter: blur(6px); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
   .chip:hover { background: #fff; }
 
-  #chat-messages { flex: 1; min-height: 0; overflow-y: auto; display: none; flex-direction: column; gap: 8px; padding: 10px 2px 12px; scrollbar-width: thin; }
-  #chat-box.started #chat-messages { display: flex; }
+  #chat-messages { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 10px 2px 12px; scrollbar-width: thin; }
   #chat-box.started #hello { display: none; }
   .msg { max-width: 86%; padding: 10px 14px; border-radius: 20px; font-size: 14px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
   .msg.user { align-self: flex-end; background: linear-gradient(135deg, #263f78, #16264a); color: #fff; border-bottom-right-radius: 6px; }
@@ -92,7 +91,6 @@
   <div id="chat-body">
     <div id="chat-messages"></div>
     <div id="hello">
-      <h3>Halo, saya Ajeng.<br>Ada yang bisa dibantu?</h3>
       <div class="chips">
         <button class="chip" type="button">Tipe rumah</button>
         <button class="chip" type="button">Promo Octoboo</button>
@@ -123,7 +121,24 @@
   const ICON_MIC = '<svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2z"/></svg>';
   const ICON_SEND = '<svg viewBox="0 0 24 24"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12 2-12 2z"/></svg>';
 
-  const toggle = () => { box.classList.toggle("open"); if (box.classList.contains("open")) input.focus(); };
+  // Sapaan pembuka dari Ajeng (hanya tampil di widget, tidak dikirim ke server sebagai riwayat).
+  const GREETING = "Halo kak, saya Ajeng, ada yang bisa dibantu ya?";
+  let greeted = false;
+  async function greet() {
+    if (greeted) return;
+    greeted = true;
+    busy = true; // tahan input sampai sapaan selesai agar urutan bubble rapi
+    const bubble = typingBubble();
+    await sleep(1400);
+    setText(bubble, GREETING);
+    list.scrollTop = list.scrollHeight;
+    busy = false;
+  }
+
+  const toggle = () => {
+    box.classList.toggle("open");
+    if (box.classList.contains("open")) { input.focus(); greet(); }
+  };
   document.getElementById("chat-toggle").onclick = toggle;
   document.getElementById("chat-close").onclick = toggle;
   document.getElementById("chat-new").onclick = () => {
@@ -131,6 +146,8 @@
     history.length = 0;
     list.textContent = "";
     box.classList.remove("started");
+    greeted = false;
+    greet();
     input.focus();
   };
 
