@@ -176,7 +176,25 @@
     var $ = function (id) { return root.getElementById(id); };
 
       const API_URL = (SCRIPT && SCRIPT.dataset.api) || ORIGIN + "/api/chat";
-      const WA_URL = "https://api.whatsapp.com/send/?phone=6282330034200&text=Saya%20tertarik%20dengan%20properti%20yang%20ditawarkan%20melalui%20website%20Shaistanaya.%20Boleh%20minta%20info%20lebih%20lanjut%3F&app_absent=0";
+      // Template pesan WhatsApp per topik, diawali "[Website]" supaya admin tahu asalnya dan langsung eksekusi.
+      const WA_PHONE = "6282330034200";
+      const WA_TOPICS = {
+        umum:     ["Chat WhatsApp",        "Halo kak, saya tertarik dengan properti yang ditawarkan melalui website Shaistanaya. Boleh minta info lebih lanjut?"],
+        survey:   ["Jadwalkan survey",     "Halo kak, saya mau jadwalkan survey ke Shaistanaya City{TIPE}. Boleh dibantu atur harinya?"],
+        harga:    ["Tanya harga",          "Halo kak, saya mau tanya harga dan pricelist terbaru{TIPE}. Boleh dikirimkan?"],
+        kpr:      ["Tanya KPR & cicilan",  "Halo kak, saya mau tanya simulasi KPR dan cicilan{TIPE}. Boleh dibantu hitung?"],
+        booking:  ["Booking unit",         "Halo kak, saya mau booking unit{TIPE}. Boleh dijelaskan alur dan unit yang tersedia?"],
+        unit:     ["Cek ketersediaan unit","Halo kak, saya mau cek ketersediaan unit{TIPE}. Unit apa yang masih ready?"],
+        promo:    ["Tanya promo",          "Halo kak, saya mau tanya promo yang sedang berjalan{TIPE}. Boleh dijelaskan?"],
+        legalitas:["Tanya legalitas",      "Halo kak, saya mau tanya soal legalitas dan sertifikat{TIPE}. Boleh dijelaskan?"],
+        orang:    ["Bicara dengan tim",    "Halo kak, saya ingin bicara langsung dengan tim Shaistanaya City{TIPE}. Boleh dihubungi?"]
+      };
+      function waLink(topic, tipe) {
+        const t = WA_TOPICS[topic] ? topic : "umum";
+        const label = tipe ? " (tipe " + tipe + ")" : "";
+        const text = "[Website Shaistanaya] " + WA_TOPICS[t][1].replace("{TIPE}", label);
+        return { href: "https://api.whatsapp.com/send/?phone=" + WA_PHONE + "&text=" + encodeURIComponent(text) + "&app_absent=0", label: WA_TOPICS[t][0] };
+      }
       const ICON_WA = '<svg viewBox="0 0 24 24"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.96L2 22l5.2-1.5A9.9 9.9 0 1 0 12.04 2zm5.8 14.05c-.25.7-1.45 1.33-2 1.4-.52.07-1.17.1-1.9-.12a17 17 0 0 1-1.7-.63c-3-1.3-4.94-4.33-5.1-4.53-.14-.2-1.2-1.6-1.2-3.05 0-1.45.76-2.17 1.03-2.46.27-.3.6-.37.8-.37h.57c.18 0 .43-.07.67.52.25.6.85 2.06.93 2.2.07.15.12.33.02.52-.1.2-.15.32-.3.5l-.45.52c-.15.15-.3.3-.13.6.17.3.77 1.27 1.65 2.05 1.13 1 2.1 1.32 2.4 1.46.3.15.47.12.65-.07.17-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.27.1 1.72.8 2.02.96.3.15.5.22.57.35.07.12.07.72-.18 1.42z"/></svg>';
       const box = $("chat-box");
       const list = $("chat-messages");
@@ -258,23 +276,28 @@
         return el;
       }
 
-      // Penanda [[WA]] atau link wa.me di teks = tampilkan tombol WhatsApp; teks dibersihkan.
+      // Penanda [[WA]] atau [[WA:topik]] atau [[WA:topik:tipe]] (atau link wa.me) = tombol WhatsApp; teks dibersihkan.
       function parseReply(text) {
-        const wa = /\[\[WA\]\]/.test(text) || /wa\.me\/6282330034200/.test(text);
+        const m = text.match(/\[\[WA(?::([a-z]+))?(?::([A-Za-z ]+))?\]\]/);
+        const wa = m ? { topic: (m[1] || "umum").toLowerCase(), tipe: m[2] ? m[2].trim() : "" } : (/wa\.me\/6282330034200/.test(text) ? { topic: "umum", tipe: "" } : null);
         const clean = text
-          .replace(/\[\[WA\]\]/g, "")
+          .replace(/\[\[WA[^\]]*\]\]/g, "")
           .replace(/\s*(\(?\s*(di|ke|lewat)\s+)?(https?:\/\/)?wa\.me\/6282330034200\)?/gi, "")
           .replace(/[ \t]+\n/g, "\n")
           .trim();
         return { clean, wa };
       }
-      function addWaButton() {
+      function addWaButton(wa) {
+        const link = waLink(wa.topic, wa.tipe);
         const a = document.createElement("a");
         a.className = "wa-btn";
-        a.href = WA_URL;
+        a.href = link.href;
         a.target = "_blank";
         a.rel = "noopener noreferrer";
-        a.innerHTML = ICON_WA + "<span>Chat WhatsApp</span>";
+        a.innerHTML = ICON_WA;
+        const span = document.createElement("span");
+        span.textContent = link.label;
+        a.appendChild(span);
         list.appendChild(a);
         list.scrollTop = list.scrollHeight;
       }
@@ -343,12 +366,12 @@
             setText(typing, parts[i]);
             list.scrollTop = list.scrollHeight;
           }
-          if (wa) addWaButton();
+          if (wa) addWaButton(wa);
           history.push({ role: "assistant", content: data.reply });
         } catch (err) {
           const { clean, wa } = parseReply(err.message || "Maaf, terjadi kesalahan.");
           setText(typing, clean);
-          if (wa) addWaButton();
+          if (wa) addWaButton(wa);
           history.pop(); // buang pesan user yang gagal agar riwayat tetap valid
         } finally {
           busy = false;

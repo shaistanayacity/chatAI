@@ -48,3 +48,9 @@ Bot punya alat pencarian web dan pembaca halaman `shaistanayacity.com` (Claude A
 - Tabel `chatbot_kb` di Supabase adalah sumber kebenaran. File `supabase/seed_*.sql` hanya isi awal; pembaruan setelahnya (USP, bank rekanan, entri pengetahuan umum, dan sebagainya) dilakukan langsung di database.
 - Promo Octoboo berakhir 31 Oktober 2026: perbarui baris kategori `promo` dan FAKTA INTI.
 - Model: `claude-haiku-5-5` (ubah konstanta `MODEL` untuk Sonnet).
+
+## Template pesan WhatsApp per topik
+
+Bot menutup jawaban berbobot dengan penanda `[[WA:topik]]` (atau `[[WA:topik:Tipe]]`, misalnya `[[WA:survey:Montana]]`). Widget mengubahnya jadi tombol WhatsApp dengan pesan yang sudah terisi dan diawali `[Website Shaistanaya]`, supaya admin tahu asalnya dan langsung tahu harus apa.
+
+Topik: `survey`, `harga`, `kpr`, `booking`, `unit`, `promo`, `legalitas`, `orang`, dan `umum` (bawaan). Template dan label tombol ada di `WA_TOPICS` di `widget.js`; kapan bot memilih topik diatur di bagian TOMBOL WHATSAPP pada `api/chat.js`.
