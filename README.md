@@ -27,6 +27,9 @@ Centang Production dan Preview, lalu Redeploy.
 
 Jika Supabase tidak terjangkau, bot tetap menjawab memakai FAKTA INTI di prompt dan mengarahkan sisanya ke WhatsApp.
 
+## Riset web
+Bot punya alat pencarian web dan pembaca halaman `shaistanayacity.com` (Claude API server tools), dipakai hanya bila jawaban tidak ada di knowledge base: maksimal 2 pencarian dan 2 pembacaan per pesan. Aturan pemakaiannya ada di bagian RISET WEB pada `SYSTEM_PROMPT` (tidak untuk harga, promo, ketersediaan, legalitas, atau aturan kawasan). Matikan dengan env var `WEB_RESEARCH=off`. Jika API menolak alat web, bot otomatis lanjut tanpa web (lihat log Vercel: "Web research ditolak").
+
 ## Catatan
 - Tabel `chatbot_kb` di Supabase adalah sumber kebenaran. File `supabase/seed_*.sql` hanya isi awal; pembaruan setelahnya (USP, bank rekanan, entri pengetahuan umum, dan sebagainya) dilakukan langsung di database.
 - Promo Octoboo berakhir 31 Oktober 2026: perbarui baris kategori `promo` dan FAKTA INTI.
