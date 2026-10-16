@@ -91,9 +91,9 @@
   .dots span:nth-child(2){animation-delay:.15s} .dots span:nth-child(3){animation-delay:.3s}
   @keyframes b { 0%,80%,100%{opacity:.3} 40%{opacity:1} }
 
-  /* Gelembung sapaan di atas tombol chat (navy, selaras dengan tombol) */
+  /* Gelembung sapaan di samping kiri tombol chat (navy, selaras dengan tombol) */
   #chat-teaser {
-    position: fixed; right: 20px; bottom: 90px; z-index: 2147483000; max-width: 260px;
+    position: fixed; right: 92px; bottom: 22px; z-index: 2147483000; max-width: 260px;
     display: none; align-items: center; padding: 12px 34px 12px 16px; cursor: pointer;
     background: linear-gradient(135deg, #263f78, #16264a); color: #fff; border-radius: 20px 20px 6px 20px;
     box-shadow: 0 8px 28px rgba(22,38,74,.38);
@@ -105,12 +105,12 @@
   #chat-teaser span { color: rgba(255,255,255,.85); }
   #teaser-close { position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border: 0; border-radius: 50%; background: transparent; color: rgba(255,255,255,.7); font-size: 11px; cursor: pointer; }
   #teaser-close:hover { background: rgba(255,255,255,.14); }
-  @keyframes teaserIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes teaserIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: none; } }
 
   /* Layar kecil (HP): kartu lebih ringkas dan tidak menutupi seluruh halaman */
   @media (max-width: 520px) {
     #chat-toggle { right: 14px; bottom: 14px; width: 52px; height: 52px; font-size: 22px; }
-    #chat-teaser { right: 14px; bottom: 76px; max-width: 220px; font-size: 13px; padding: 10px 30px 10px 14px; }
+    #chat-teaser { right: 76px; bottom: 14px; max-width: 220px; font-size: 13px; padding: 10px 30px 10px 14px; }
     #chat-box {
       right: 12px; bottom: 76px;
       width: min(330px, calc(100vw - 24px));
