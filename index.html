@@ -123,6 +123,21 @@
     return el;
   }
 
+  // Tampilkan **teks** sebagai tebal, tanpa innerHTML (aman dari XSS)
+  function setText(el, text) {
+    el.textContent = "";
+    text.split(/\*\*(.+?)\*\*/gs).forEach((part, i) => {
+      if (!part) return;
+      if (i % 2) {
+        const b = document.createElement("strong");
+        b.textContent = part;
+        el.appendChild(b);
+      } else {
+        el.appendChild(document.createTextNode(part.replace(/\*\*/g, "")));
+      }
+    });
+  }
+
   async function ask(text) {
     if (busy || !text) return;
     busy = true;
@@ -139,10 +154,10 @@
       });
       const data = await r.json();
       if (!r.ok) throw new Error(data.error || "Error");
-      typing.textContent = data.reply;
+      setText(typing, data.reply);
       history.push({ role: "assistant", content: data.reply });
     } catch (err) {
-      typing.textContent = err.message || "Maaf, terjadi kesalahan.";
+      setText(typing, err.message || "Maaf, terjadi kesalahan.");
       history.pop(); // buang pesan user yang gagal agar riwayat tetap valid
     } finally {
       busy = false;
