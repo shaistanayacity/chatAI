@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Shaistanaya City</title>
 <style>
-  :root { --ink:#1c1c28; --muted:#7c7c8a; --accent:#5b6cf0; }
+  :root { --ink:#16264a; --muted:#7a7f90; --accent:#16264a; --gold:#c9a24b; }
   * { box-sizing: border-box; }
   body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0; padding: 2rem; color: var(--ink); background:#f4f4f8; min-height: 100vh; }
 
@@ -13,7 +13,7 @@
     position: fixed; right: 20px; bottom: 20px; width: 60px; height: 60px; border: 0; border-radius: 50%;
     background: #fff; cursor: pointer; font-size: 26px; z-index: 20;
     box-shadow: 0 8px 24px rgba(60,60,120,.25);
-    background: radial-gradient(circle at 30% 30%, #fff, #e9ecff);
+    background: linear-gradient(135deg, #263f78, #16264a); color: var(--gold); box-shadow: 0 8px 24px rgba(22,38,74,.4);
   }
 
   #chat-box {
@@ -21,23 +21,24 @@
     width: 360px; max-width: calc(100vw - 32px); height: 560px; max-height: calc(100vh - 116px);
     display: none; flex-direction: column; overflow: hidden; isolation: isolate;
     background: #fff; border-radius: 36px;
-    box-shadow: 0 24px 60px rgba(40,40,100,.22), 0 0 0 1px rgba(0,0,0,.04);
+    box-shadow: 0 24px 60px rgba(22,38,74,.3), 0 0 0 1px rgba(0,0,0,.04);
   }
   #chat-box.open { display: flex; }
 
   /* glow pastel di bagian bawah */
   #chat-box::before {
-    content: ""; position: absolute; inset: 30% -20% -25% -20%; z-index: -1; filter: blur(38px); opacity: .9;
+    content: ""; position: absolute; inset: 26% -15% -20% -15%; z-index: -1; filter: blur(34px); opacity: 1;
     background:
-      radial-gradient(40% 45% at 12% 55%, #ffd0d6 0, transparent 70%),
-      radial-gradient(38% 45% at 30% 85%, #c9f5d0 0, transparent 70%),
-      radial-gradient(40% 45% at 70% 80%, #cfd4ff 0, transparent 70%),
-      radial-gradient(35% 40% at 92% 45%, #ffc9cf 0, transparent 70%),
-      radial-gradient(35% 40% at 55% 45%, #fff3c8 0, transparent 70%);
+      radial-gradient(45% 40% at 20% 42%, #f6e3a6 0, transparent 70%),
+      radial-gradient(45% 40% at 82% 36%, #ecd083 0, transparent 70%),
+      radial-gradient(40% 35% at 50% 62%, #f2d98f 0, transparent 70%),
+      radial-gradient(60% 42% at 14% 90%, #16264a 0, transparent 75%),
+      radial-gradient(60% 42% at 88% 88%, #2a4580 0, transparent 75%),
+      radial-gradient(45% 30% at 52% 96%, #1a2d58 0, transparent 72%);
   }
 
   #chat-head { display: flex; align-items: center; gap: 12px; padding: 20px 20px 10px 22px; }
-  #avatar { position: relative; flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 600; font-size: 18px; background: linear-gradient(135deg, #f6a6b2, #8f9bff); box-shadow: 0 2px 8px rgba(80,80,160,.25); }
+  #avatar { position: relative; flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 600; font-size: 18px; background: linear-gradient(135deg, #c9a24b, #16264a); box-shadow: 0 2px 8px rgba(22,38,74,.3); }
   #avatar img { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; z-index: 1; }
   #avatar::after { z-index: 2; content: ""; position: absolute; right: 0; bottom: 0; width: 11px; height: 11px; border-radius: 50%; background: #2fc86b; border: 2px solid #fff; }
   #who { flex: 1; min-width: 0; }
@@ -48,26 +49,28 @@
   #chat-close { width: 32px; padding: 0; font-size: 14px; color: var(--muted); }
 
   #chat-body { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 0 22px; }
-  #hello { margin-top: auto; padding: 0 6px 14px; }
+  #hello { padding: 0 2px 12px; }
   #hello h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; font-size: 28px; line-height: 1.15; margin: 0 0 16px; letter-spacing: -.5px; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip { border: 0; cursor: pointer; font: inherit; font-size: 13px; color: #44444f; padding: 9px 15px; border-radius: 999px; background: rgba(255,255,255,.65); backdrop-filter: blur(6px); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
   .chip:hover { background: #fff; }
 
-  #chat-messages { flex: 1; min-height: 0; overflow-y: auto; display: none; flex-direction: column; gap: 8px; padding: 10px 2px 12px; scrollbar-width: thin; }
-  #chat-box.started #chat-messages { display: flex; }
+  #chat-messages { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 10px 2px 12px; scrollbar-width: thin; }
   #chat-box.started #hello { display: none; }
   .msg { max-width: 86%; padding: 10px 14px; border-radius: 20px; font-size: 14px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
-  .msg.user { align-self: flex-end; background: var(--ink); color: #fff; border-bottom-right-radius: 6px; }
+  .msg.user { align-self: flex-end; background: linear-gradient(135deg, #263f78, #16264a); color: #fff; border-bottom-right-radius: 6px; }
   .msg.bot { align-self: flex-start; background: rgba(255,255,255,.85); box-shadow: 0 1px 3px rgba(0,0,0,.08); border-bottom-left-radius: 6px; }
 
   #chat-form { display: flex; gap: 10px; align-items: center; padding: 8px 22px 22px; }
-  #chat-input { flex: 1; min-width: 0; border: 0; outline: none; font: inherit; font-size: 15px; padding: 0 22px; height: 56px; border-radius: 999px; background: rgba(255,255,255,.9); box-shadow: 0 2px 10px rgba(60,60,120,.1); color: var(--ink); }
+  #chat-input { flex: 1; min-width: 0; border: 0; outline: none; font: inherit; font-size: 15px; padding: 0 22px; height: 56px; border-radius: 999px; background: rgba(255,255,255,.9); box-shadow: 0 2px 10px rgba(22,38,74,.15); color: var(--ink); }
   #chat-input::placeholder { color: #9a9aa6; }
-  #chat-btn { flex: none; width: 56px; height: 56px; border: 0; border-radius: 50%; cursor: pointer; background: rgba(255,255,255,.9); box-shadow: 0 2px 10px rgba(60,60,120,.1); color: var(--accent); display: grid; place-items: center; }
+  #chat-btn { flex: none; width: 56px; height: 56px; border: 0; border-radius: 50%; cursor: pointer; background: rgba(255,255,255,.9); box-shadow: 0 2px 10px rgba(22,38,74,.15); color: var(--accent); display: grid; place-items: center; }
   #chat-btn.rec { background: #ff5a6a; color: #fff; }
   #chat-btn:disabled { opacity: .5; cursor: default; }
   #chat-btn svg { width: 22px; height: 22px; fill: currentColor; }
+  .wa-btn { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-size: 14px; font-weight: 600; color: #fff; background: #25d366; padding: 11px 18px; border-radius: 999px; box-shadow: 0 4px 12px rgba(37,211,102,.35); }
+  .wa-btn:hover { background: #1fbd5a; }
+  .wa-btn svg { width: 18px; height: 18px; fill: currentColor; }
   .dots span { display:inline-block; width:6px; height:6px; margin:0 2px; border-radius:50%; background:#9a9aa6; animation: b 1s infinite; }
   .dots span:nth-child(2){animation-delay:.15s} .dots span:nth-child(3){animation-delay:.3s}
   @keyframes b { 0%,80%,100%{opacity:.3} 40%{opacity:1} }
@@ -88,7 +91,6 @@
   <div id="chat-body">
     <div id="chat-messages"></div>
     <div id="hello">
-      <h3>Halo, saya Ajeng.<br>Ada yang bisa dibantu?</h3>
       <div class="chips">
         <button class="chip" type="button">Tipe rumah</button>
         <button class="chip" type="button">Promo Octoboo</button>
@@ -106,6 +108,8 @@
 
 <script>
   const API_URL = "/api/chat";
+  const WA_URL = "https://api.whatsapp.com/send/?phone=6282330034200&text=Saya%20tertarik%20dengan%20properti%20yang%20ditawarkan%20melalui%20website%20Shaistanaya.%20Boleh%20minta%20info%20lebih%20lanjut%3F&app_absent=0";
+  const ICON_WA = '<svg viewBox="0 0 24 24"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.96L2 22l5.2-1.5A9.9 9.9 0 1 0 12.04 2zm5.8 14.05c-.25.7-1.45 1.33-2 1.4-.52.07-1.17.1-1.9-.12a17 17 0 0 1-1.7-.63c-3-1.3-4.94-4.33-5.1-4.53-.14-.2-1.2-1.6-1.2-3.05 0-1.45.76-2.17 1.03-2.46.27-.3.6-.37.8-.37h.57c.18 0 .43-.07.67.52.25.6.85 2.06.93 2.2.07.15.12.33.02.52-.1.2-.15.32-.3.5l-.45.52c-.15.15-.3.3-.13.6.17.3.77 1.27 1.65 2.05 1.13 1 2.1 1.32 2.4 1.46.3.15.47.12.65-.07.17-.2.75-.87.95-1.17.2-.3.4-.25.67-.15.27.1 1.72.8 2.02.96.3.15.5.22.57.35.07.12.07.72-.18 1.42z"/></svg>';
   const box = document.getElementById("chat-box");
   const list = document.getElementById("chat-messages");
   const form = document.getElementById("chat-form");
@@ -117,7 +121,24 @@
   const ICON_MIC = '<svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2z"/></svg>';
   const ICON_SEND = '<svg viewBox="0 0 24 24"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12 2-12 2z"/></svg>';
 
-  const toggle = () => { box.classList.toggle("open"); if (box.classList.contains("open")) input.focus(); };
+  // Sapaan pembuka dari Ajeng (hanya tampil di widget, tidak dikirim ke server sebagai riwayat).
+  const GREETING = "Halo kak, saya Ajeng, ada yang bisa dibantu ya?";
+  let greeted = false;
+  async function greet() {
+    if (greeted) return;
+    greeted = true;
+    busy = true; // tahan input sampai sapaan selesai agar urutan bubble rapi
+    const bubble = typingBubble();
+    await sleep(1400);
+    setText(bubble, GREETING);
+    list.scrollTop = list.scrollHeight;
+    busy = false;
+  }
+
+  const toggle = () => {
+    box.classList.toggle("open");
+    if (box.classList.contains("open")) { input.focus(); greet(); }
+  };
   document.getElementById("chat-toggle").onclick = toggle;
   document.getElementById("chat-close").onclick = toggle;
   document.getElementById("chat-new").onclick = () => {
@@ -125,6 +146,8 @@
     history.length = 0;
     list.textContent = "";
     box.classList.remove("started");
+    greeted = false;
+    greet();
     input.focus();
   };
 
@@ -135,6 +158,27 @@
     list.appendChild(el);
     list.scrollTop = list.scrollHeight;
     return el;
+  }
+
+  // Penanda [[WA]] atau link wa.me di teks = tampilkan tombol WhatsApp; teks dibersihkan.
+  function parseReply(text) {
+    const wa = /\[\[WA\]\]/.test(text) || /wa\.me\/6282330034200/.test(text);
+    const clean = text
+      .replace(/\[\[WA\]\]/g, "")
+      .replace(/\s*(\(?\s*(di|ke|lewat)\s+)?(https?:\/\/)?wa\.me\/6282330034200\)?/gi, "")
+      .replace(/[ \t]+\n/g, "\n")
+      .trim();
+    return { clean, wa };
+  }
+  function addWaButton() {
+    const a = document.createElement("a");
+    a.className = "wa-btn";
+    a.href = WA_URL;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.innerHTML = ICON_WA + "<span>Chat WhatsApp</span>";
+    list.appendChild(a);
+    list.scrollTop = list.scrollHeight;
   }
 
   // Tampilkan **teks** sebagai tebal, tanpa innerHTML (aman dari XSS)
@@ -152,14 +196,33 @@
     });
   }
 
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  // Jeda "mengetik" agar terasa seperti manusia. Ubah angka ini untuk lebih cepat/lambat.
+  const TYPE_BASE_MS = 1200;     // jeda minimum sebelum bubble muncul
+  const TYPE_PER_CHAR_MS = 45;   // tambahan per karakter
+  const TYPE_MAX_MS = 4500;      // batas jeda per bubble
+  const GAP_BETWEEN_MS = 500;    // napas antar bubble
+  const typeDelay = (t) => Math.min(TYPE_MAX_MS, TYPE_BASE_MS + t.length * TYPE_PER_CHAR_MS);
+  function typingBubble() {
+    const el = add("bot", "");
+    el.innerHTML = '<span class="dots"><span></span><span></span><span></span></span>';
+    return el;
+  }
+  // Balasan dipecah per paragraf jadi beberapa bubble, masing-masing dengan jeda mengetik.
+  function splitReply(text) {
+    const parts = text.split(/\n\s*\n/).map((t) => t.trim()).filter(Boolean);
+    if (parts.length <= 3) return parts;
+    return [parts[0], parts[1], parts.slice(2).join("\n\n")];
+  }
+
   async function ask(text) {
     if (busy || !text) return;
     busy = true;
     box.classList.add("started");
     add("user", text);
     history.push({ role: "user", content: text });
-    const typing = add("bot", "");
-    typing.innerHTML = '<span class="dots"><span></span><span></span><span></span></span>';
+    let typing = typingBubble();
+    const startedAt = Date.now();
     try {
       const r = await fetch(API_URL, {
         method: "POST",
@@ -168,10 +231,26 @@
       });
       const data = await r.json();
       if (!r.ok) throw new Error(data.error || "Error");
-      setText(typing, data.reply);
+      const { clean, wa } = parseReply(data.reply);
+      const parts = splitReply(clean);
+      for (let i = 0; i < parts.length; i++) {
+        if (i > 0) {
+          await sleep(GAP_BETWEEN_MS);
+          typing = typingBubble();
+          await sleep(typeDelay(parts[i]));
+        } else {
+          // waktu menunggu server dihitung sebagai bagian dari jeda mengetik
+          await sleep(Math.max(0, typeDelay(parts[i]) - (Date.now() - startedAt)));
+        }
+        setText(typing, parts[i]);
+        list.scrollTop = list.scrollHeight;
+      }
+      if (wa) addWaButton();
       history.push({ role: "assistant", content: data.reply });
     } catch (err) {
-      setText(typing, err.message || "Maaf, terjadi kesalahan.");
+      const { clean, wa } = parseReply(err.message || "Maaf, terjadi kesalahan.");
+      setText(typing, clean);
+      if (wa) addWaButton();
       history.pop(); // buang pesan user yang gagal agar riwayat tetap valid
     } finally {
       busy = false;
