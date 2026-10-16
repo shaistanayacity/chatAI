@@ -6,6 +6,11 @@ const MAX_MESSAGES = 20;
 const MAX_CHARS = 2000;
 const MAX_TOKENS = 500;
 
+// Rate limiting (per IP, jendela tetap). Ubah angkanya sesuai kebutuhan.
+const LIMIT_PER_MINUTE = 10;
+const LIMIT_PER_DAY = 60;
+const LIMIT_GLOBAL_PER_DAY = 3000; // pengaman total biaya per hari
+
 const SYSTEM_PROMPT = `Kamu adalah asisten virtual Shaistanaya City (tagline: Cozy Urban Living), perumahan modern di pusat Kota Sidoarjo. Tugasmu membantu calon pembeli dan mengarahkan mereka ke survey atau tim marketing.
 
 GAYA BAHASA
@@ -78,6 +83,81 @@ SURVEY DAN BOOKING
 CONTOH SAPAAN AWAL
 "Halo, Kak! Selamat datang di Shaistanaya City, perumahan modern di pusat Kota Sidoarjo. Boleh tahu, Kakak sedang cari rumah untuk keluarga atau untuk investasi?"`;
 
+// --- Rate limiting -------------------------------------------------------
+// Pakai Upstash Redis (REST) jika env var tersedia, sehingga hitungan dibagi
+// semua instance serverless. Tanpa itu, jatuh ke memori lokal (best-effort).
+const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+const memory = new Map(); // key -> { count, expires }
+
+function memoryHit(key, ttl) {
+  const now = Date.now();
+  if (memory.size > 5000) {
+    for (const [k, v] of memory) if (v.expires <= now) memory.delete(k);
+  }
+  let e = memory.get(key);
+  if (!e || e.expires <= now) e = { count: 0, expires: now + ttl * 1000 };
+  e.count += 1;
+  memory.set(key, e);
+  return e.count;
+}
+
+async function hitAll(checks) {
+  if (REDIS_URL && REDIS_TOKEN) {
+    try {
+      const cmds = checks.flatMap(([key, ttl]) => [
+        ["INCR", key],
+        ["EXPIRE", key, ttl, "NX"],
+      ]);
+      const r = await fetch(`${REDIS_URL}/pipeline`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${REDIS_TOKEN}` },
+        body: JSON.stringify(cmds),
+      });
+      if (r.ok) {
+        const out = await r.json();
+        return checks.map((_, i) => Number(out[i * 2].result));
+      }
+      console.error("Redis rate limit error", r.status);
+    } catch (err) {
+      console.error("Redis rate limit error", err);
+    }
+  }
+  return checks.map(([key, ttl]) => memoryHit(key, ttl));
+}
+
+function clientIp(req) {
+  const fwd = req.headers["x-forwarded-for"];
+  const first = (Array.isArray(fwd) ? fwd[0] : fwd || "").split(",")[0].trim();
+  return first || req.headers["x-real-ip"] || "unknown";
+}
+
+// Mengembalikan null jika lolos, atau { status, retryAfter, error } jika diblokir.
+async function checkRateLimit(req) {
+  const ip = clientIp(req);
+  const now = Date.now();
+  const minute = Math.floor(now / 60000);
+  const day = new Date(now).toISOString().slice(0, 10);
+  const [perMin, perDay, global] = await hitAll([
+    [`rl:min:${ip}:${minute}`, 60],
+    [`rl:day:${ip}:${day}`, 86400],
+    [`rl:global:${day}`, 86400],
+  ]);
+  if (perMin > LIMIT_PER_MINUTE) {
+    return {
+      retryAfter: 60 - Math.floor((now % 60000) / 1000),
+      error: "Terlalu banyak pesan sekaligus. Coba lagi sebentar ya, Kak.",
+    };
+  }
+  if (perDay > LIMIT_PER_DAY || global > LIMIT_GLOBAL_PER_DAY) {
+    return {
+      retryAfter: 3600,
+      error: "Chat sedang penuh hari ini. Silakan hubungi tim kami di wa.me/6282330034200 ya, Kak.",
+    };
+  }
+  return null;
+}
+
 function sanitize(messages) {
   if (!Array.isArray(messages)) return [];
   const clean = messages
@@ -103,6 +183,12 @@ export default async function handler(req, res) {
 
   if (!process.env.ANTHROPIC_API_KEY) {
     return res.status(500).json({ error: "Server belum dikonfigurasi." });
+  }
+
+  const limited = await checkRateLimit(req);
+  if (limited) {
+    res.setHeader("Retry-After", String(limited.retryAfter));
+    return res.status(429).json({ error: limited.error });
   }
 
   const messages = sanitize(req.body && req.body.messages);
