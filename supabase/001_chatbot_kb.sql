@@ -41,6 +41,8 @@ language plpgsql stable security definer set search_path = public as $$
 declare
   -- Kata umum yang tidak membantu membedakan topik.
   stop text[] := array['rumah','saya','aku','bisa','apa','ada','mau','kak','kakak','berapa','yang','untuk','dari','gak','nggak','tidak','atau','dan','ini','itu','dengan','sih','dong','nih','tapi','kalau','jadi','boleh','tanya','lihat','ingin','pengen','minta','tolong','halo','hai','selamat','pagi','siang','sore','malam','makasih','terima','kasih','ya','dimana','gimana','bagaimana','apakah','punya'];
+  -- Singkatan dua huruf yang bermakna.
+  short_ok text[] := array['dp','rs','ac'];
   terms text;
   tsq tsquery;
 begin
@@ -49,7 +51,7 @@ begin
     from regexp_split_to_table(
       regexp_replace(left(coalesce(q, ''), 400), '[^[:alnum:] ]', ' ', 'g'), '\s+'
     ) as w
-    where length(w) >= 3 and lower(w) <> all (stop)
+    where (length(w) >= 3 or lower(w) = any (short_ok)) and lower(w) <> all (stop)
     limit 20
   ) s;
   if terms is null then return; end if;
