@@ -269,7 +269,29 @@ function sanitize(messages) {
   return clean;
 }
 
+// Website yang boleh memasang widget (CORS). Tambah lewat env ALLOWED_ORIGINS, dipisah koma.
+// Halaman milik chatbot sendiri (same-origin) tidak memerlukan izin ini.
+const ALLOWED_ORIGINS = (
+  process.env.ALLOWED_ORIGINS || "https://shaistanayacity.com,https://www.shaistanayacity.com"
+)
+  .split(",")
+  .map((o) => o.trim().replace(/\/$/, ""))
+  .filter(Boolean);
+
+function applyCors(req, res) {
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  res.setHeader("Vary", "Origin");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Max-Age", "86400");
+}
+
 export default async function handler(req, res) {
+  applyCors(req, res);
+  if (req.method === "OPTIONS") return res.status(204).end(); // preflight dari browser
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ error: "Method not allowed" });

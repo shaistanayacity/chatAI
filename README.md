@@ -4,7 +4,8 @@ Chatbot Shaistanaya City (Vercel serverless + API Claude + knowledge base di Sup
 
 ## Struktur
 - `api/chat.js`: backend. Mengambil entri knowledge base yang relevan dari Supabase, lalu memanggil API Claude.
-- `index.html`: widget chat.
+- `widget.js`: widget chat yang mandiri (Shadow DOM), dipasang di website lewat satu baris skrip.
+- `index.html`: halaman contoh yang memuat `widget.js`.
 - `ajeng.jpg`: foto profil di header widget.
 - `supabase/001_chatbot_kb.sql`: skema tabel `chatbot_kb` dan fungsi pencarian.
 - `supabase/seed_kb.sql`: isi awal knowledge base (dari PDF 100 FAQ).
@@ -18,6 +19,18 @@ Chatbot Shaistanaya City (Vercel serverless + API Claude + knowledge base di Sup
 | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | (opsional) Upstash Redis untuk rate limiting yang akurat |
 
 Centang Production dan Preview, lalu Redeploy.
+
+## Memasang di website
+Tempel satu baris ini sebelum `</body>` di website (atau di kolom "custom code / footer script" pada pembuat website):
+
+```html
+<script src="https://chatai-two-gules.vercel.app/widget.js" defer></script>
+```
+
+- Ganti `chatai-two-gules.vercel.app` dengan domain chatbot di Vercel (misalnya domain khusus seperti `chat.shaistanayacity.com`).
+- Domain website yang diizinkan memanggil API ada di env var `ALLOWED_ORIGINS` (dipisah koma, bawaan `https://shaistanayacity.com,https://www.shaistanayacity.com`). Tambahkan domain lain, misalnya domain staging, lalu Redeploy.
+- Tampilan widget diisolasi dengan Shadow DOM sehingga tidak bentrok dengan CSS website.
+- Jika website memakai Content-Security-Policy, izinkan domain chatbot di `script-src`, `connect-src`, dan `img-src`.
 
 ## Melatih bot
 1. **Fakta dan jawaban**: buka Supabase → Table Editor → `chatbot_kb`. Ubah isi `content`, tambah baris baru, atau set `active = false` untuk menyembunyikan. Perubahan langsung berlaku tanpa deploy.
