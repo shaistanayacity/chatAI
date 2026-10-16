@@ -1,17 +1,32 @@
 # chatAI
 
-Chatbot untuk website bisnis, memakai Vercel (serverless function) dan API Claude.
+Chatbot Shaistanaya City (Vercel serverless + API Claude + knowledge base di Supabase).
 
 ## Struktur
-- `api/chat.js`: backend yang memanggil API Claude
-- `index.html`: widget chat di pojok kanan bawah
+- `api/chat.js`: backend. Mengambil entri knowledge base yang relevan dari Supabase, lalu memanggil API Claude.
+- `index.html`: widget chat.
+- `ajeng.jpg`: foto profil di header widget.
+- `supabase/001_chatbot_kb.sql`: skema tabel `chatbot_kb` dan fungsi pencarian.
+- `supabase/seed_kb.sql`: isi awal knowledge base (dari PDF 100 FAQ).
 
-## Cara pakai
-1. Isi bagian `[ISI DI SINI]` di `SYSTEM_PROMPT` dalam `api/chat.js` (produk, harga, jam operasional, FAQ, nomor WhatsApp).
-2. Deploy ke Vercel.
-3. Tambahkan environment variable `ANTHROPIC_API_KEY` di pengaturan proyek Vercel. API key dibuat di console.anthropic.com.
-4. Buka URL hasil deploy dan coba chat-nya.
+## Environment variable (Vercel → Settings → Environment Variables)
+| Nama | Isi |
+| --- | --- |
+| `ANTHROPIC_API_KEY` | API key dari console.anthropic.com |
+| `SUPABASE_URL` | `https://onulndjicgdopsmtdoei.supabase.co` |
+| `SUPABASE_ANON_KEY` | Kunci **publishable/anon** project Supabase (Settings → API Keys). Jangan pakai service role. |
+| `KV_REST_API_URL`, `KV_REST_API_TOKEN` | (opsional) Upstash Redis untuk rate limiting yang akurat |
+
+Centang Production dan Preview, lalu Redeploy.
+
+## Melatih bot
+1. **Fakta dan jawaban**: buka Supabase → Table Editor → `chatbot_kb`. Ubah isi `content`, tambah baris baru, atau set `active = false` untuk menyembunyikan. Perubahan langsung berlaku tanpa deploy.
+   - `title` dan `tags` paling berpengaruh pada pencarian; masukkan kata yang biasa diketik pengunjung (sinonim, istilah sehari-hari).
+   - `priority` (angka lebih besar = lebih diutamakan saat skor seri).
+2. **Gaya bicara dan aturan**: ubah `SYSTEM_PROMPT` di `api/chat.js` (bagian GAYA BAHASA, KAPAN SERAHKAN KE MANUSIA, FAKTA INTI).
+
+Jika Supabase tidak terjangkau, bot tetap menjawab memakai FAKTA INTI di prompt dan mengarahkan sisanya ke WhatsApp.
 
 ## Catatan
-- Model default `claude-sonnet-5-5`. Ganti ke `claude-haiku-5-5` di `api/chat.js` untuk biaya lebih murah.
-- Sebelum dipakai publik, tambahkan rate limiting.
+- Promo Octoboo berakhir 31 Oktober 2026: perbarui baris kategori `promo` dan FAKTA INTI.
+- Model: `claude-haiku-5-5` (ubah konstanta `MODEL` untuk Sonnet).
