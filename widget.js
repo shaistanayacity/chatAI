@@ -83,28 +83,26 @@
   .dots span:nth-child(2){animation-delay:.15s} .dots span:nth-child(3){animation-delay:.3s}
   @keyframes b { 0%,80%,100%{opacity:.3} 40%{opacity:1} }
 
-  /* Gelembung sapaan di atas tombol chat */
+  /* Gelembung sapaan di atas tombol chat (navy, selaras dengan tombol) */
   #chat-teaser {
     position: fixed; right: 20px; bottom: 90px; z-index: 2147483000; max-width: 260px;
-    display: none; align-items: center; gap: 10px; padding: 10px 30px 10px 10px; cursor: pointer;
-    background: #fff; color: var(--ink); border-radius: 20px 20px 6px 20px;
-    box-shadow: 0 8px 28px rgba(22,38,74,.22), 0 0 0 1px rgba(22,38,74,.06);
+    display: none; align-items: center; padding: 12px 34px 12px 16px; cursor: pointer;
+    background: linear-gradient(135deg, #263f78, #16264a); color: #fff; border-radius: 20px 20px 6px 20px;
+    box-shadow: 0 8px 28px rgba(22,38,74,.38);
     font-size: 14px; line-height: 1.35;
   }
   #chat-teaser.show { display: flex; animation: teaserIn .35s ease-out both; }
   #chat-box.open ~ #chat-teaser { display: none !important; }
-  #chat-teaser img { flex: none; width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
-  #chat-teaser b { display: block; font-weight: 600; }
-  #chat-teaser span { color: #44444f; }
-  #teaser-close { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; border: 0; border-radius: 50%; background: transparent; color: var(--muted); font-size: 11px; cursor: pointer; }
-  #teaser-close:hover { background: rgba(0,0,0,.06); }
+  #chat-teaser b { display: block; font-weight: 600; color: #fff; }
+  #chat-teaser span { color: rgba(255,255,255,.85); }
+  #teaser-close { position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border: 0; border-radius: 50%; background: transparent; color: rgba(255,255,255,.7); font-size: 11px; cursor: pointer; }
+  #teaser-close:hover { background: rgba(255,255,255,.14); }
   @keyframes teaserIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
   /* Layar kecil (HP): kartu lebih ringkas dan tidak menutupi seluruh halaman */
   @media (max-width: 520px) {
     #chat-toggle { right: 14px; bottom: 14px; width: 52px; height: 52px; font-size: 22px; }
-    #chat-teaser { right: 14px; bottom: 76px; max-width: 220px; font-size: 13px; padding: 8px 28px 8px 8px; }
-    #chat-teaser img { width: 32px; height: 32px; }
+    #chat-teaser { right: 14px; bottom: 76px; max-width: 220px; font-size: 13px; padding: 10px 30px 10px 14px; }
     #chat-box {
       right: 12px; bottom: 76px;
       width: min(330px, calc(100vw - 24px));
@@ -157,7 +155,6 @@
   </form>
 </div>
 <div id="chat-teaser" role="button" tabindex="0" aria-label="Buka chat dengan Ajeng">
-  <img src="${ORIGIN}/ajeng.jpg" alt="" onerror="this.remove()">
   <div><b>Halo, saya Ajeng 👋</b><span>Ada yang bisa dibantu?</span></div>
   <button id="teaser-close" type="button" aria-label="Tutup sapaan">✕</button>
 </div>`;
