@@ -24,6 +24,14 @@
     background: linear-gradient(135deg, #263f78, #16264a); color: var(--gold); box-shadow: 0 8px 24px rgba(22,38,74,.4);
   }
 
+  #chat-badge {
+    position: absolute; top: -3px; right: -3px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px;
+    background: #e53935; color: #fff; font-size: 12px; font-weight: 700; line-height: 22px; text-align: center;
+    border: 2px solid #fff; display: none; pointer-events: none;
+  }
+  #chat-badge.show { display: block; animation: badgePop .4s cubic-bezier(.3,1.6,.5,1) both; }
+  @keyframes badgePop { from { transform: scale(0); } to { transform: scale(1); } }
+
   #chat-box {
     position: fixed; right: 20px; bottom: 92px; z-index: 2147483000;
     width: 360px; max-width: calc(100vw - 32px); height: 560px; max-height: calc(100vh - 116px);
@@ -129,7 +137,7 @@
   }
 `;
 
-  var HTML = `<button id="chat-toggle" aria-label="Buka chat">💬</button>
+  var HTML = `<button id="chat-toggle" aria-label="Buka chat">💬<span id="chat-badge" aria-hidden="true">1</span></button>
 <div id="chat-box" role="dialog" aria-label="Chat Shaistanaya City">
   <div id="chat-head">
     <div id="avatar"><img src="${ORIGIN}/ajeng.jpg" alt="Ajeng" width="44" height="44" onerror="this.remove()"><span aria-hidden="true">A</span></div>
@@ -204,13 +212,24 @@
         teaser.classList.remove("show");
         try { sessionStorage.setItem(TEASER_KEY, "1"); } catch (e) {}
       }
-      if (!teaserDismissed) {
-        setTimeout(() => { if (!box.classList.contains("open")) teaser.classList.add("show"); }, 2500);
+      // Titik merah "1" seperti notifikasi belum terbaca; hilang setelah chat dibuka.
+      const badge = $("chat-badge");
+      const BADGE_KEY = "shaistanaya-badge-seen";
+      let badgeSeen = false;
+      try { badgeSeen = sessionStorage.getItem(BADGE_KEY) === "1"; } catch (e) {}
+      function clearBadge() {
+        badge.classList.remove("show");
+        try { sessionStorage.setItem(BADGE_KEY, "1"); } catch (e) {}
       }
+      setTimeout(() => {
+        if (box.classList.contains("open")) return;
+        if (!badgeSeen) badge.classList.add("show");
+        if (!teaserDismissed) teaser.classList.add("show");
+      }, 2500);
 
       const toggle = () => {
         box.classList.toggle("open");
-        if (box.classList.contains("open")) { hideTeaser(); input.focus(); greet(); }
+        if (box.classList.contains("open")) { hideTeaser(); clearBadge(); input.focus(); greet(); }
       };
       teaser.addEventListener("click", (e) => {
         if (e.target.closest("#teaser-close")) { hideTeaser(); return; }
