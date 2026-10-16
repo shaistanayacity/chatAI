@@ -4,7 +4,10 @@
 const MODEL = "claude-haiku-5-5"; // ganti ke "claude-sonnet-5-5" untuk jawaban lebih canggih (lebih mahal)
 const MAX_MESSAGES = 20;
 const MAX_CHARS = 2000;
-const MAX_TOKENS = 500;
+// Batas keluaran per balasan. Token "berpikir" model ikut dihitung, jadi jangan terlalu kecil
+// (500 pernah membuat jawaban terpotong). Balasan tetap pendek karena diatur di prompt.
+const MAX_TOKENS = 1500;
+const EFFORT = "low"; // chat singkat tidak perlu banyak berpikir: lebih cepat dan lebih murah
 
 // Knowledge base di Supabase (tabel chatbot_kb, dicari lewat fungsi chatbot_kb_search).
 const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -183,6 +186,14 @@ async function retrieveKnowledge(messages) {
   }
 }
 
+// Potong ke akhir kalimat lengkap terakhir; jika tidak ada tanda akhir kalimat, kembalikan apa adanya.
+function trimToLastSentence(text) {
+  const t = text.trim();
+  if (/[.!?…]["')\]]?$/.test(t)) return t;
+  const m = t.match(/^[\s\S]*[.!?…]["')\]]?(?=\s|$)/);
+  return m ? m[0].trim() : t;
+}
+
 function sanitize(messages) {
   if (!Array.isArray(messages)) return [];
   const clean = messages
@@ -241,6 +252,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: MAX_TOKENS,
+        output_config: { effort: EFFORT },
         system,
         messages,
       }),
@@ -254,11 +266,13 @@ export default async function handler(req, res) {
     }
 
     const data = await r.json();
-    const reply = (data.content || [])
+    let reply = (data.content || [])
       .filter((b) => b.type === "text")
       .map((b) => b.text)
       .join("\n")
       .trim();
+    // Jika tetap terpotong (batas token), buang potongan kalimat terakhir agar tidak berhenti di tengah kata.
+    if (data.stop_reason === "max_tokens") reply = trimToLastSentence(reply);
 
     return res.status(200).json({ reply: reply || "Maaf, tidak ada jawaban." });
   } catch (err) {
