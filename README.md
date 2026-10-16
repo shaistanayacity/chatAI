@@ -29,6 +29,7 @@ Tempel satu baris ini sebelum `</body>` di website (atau di kolom "custom code /
 
 - Ganti `chatai-two-gules.vercel.app` dengan domain chatbot di Vercel (misalnya domain khusus seperti `chat.shaistanayacity.com`).
 - Domain website yang diizinkan memanggil API ada di env var `ALLOWED_ORIGINS` (dipisah koma, bawaan `https://shaistanayacity.com,https://www.shaistanayacity.com`). Tambahkan domain lain, misalnya domain staging, lalu Redeploy.
+- Sekitar 2,5 detik setelah halaman terbuka muncul gelembung sapaan kecil dari Ajeng di atas tombol chat ("Halo, saya Ajeng 👋 Ada yang bisa dibantu?"). Gelembung hilang saat diklik, ditutup (✕), atau chat dibuka, dan tidak muncul lagi selama sesi browser yang sama. Teksnya ada di `widget.js` (cari `chat-teaser`).
 - Tampilan widget diisolasi dengan Shadow DOM sehingga tidak bentrok dengan CSS website.
 - Jika website memakai Content-Security-Policy, izinkan domain chatbot di `script-src`, `connect-src`, dan `img-src`.
 
