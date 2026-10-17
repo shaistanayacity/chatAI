@@ -300,6 +300,35 @@ function applyCors(req, res) {
   res.setHeader("Access-Control-Max-Age", "86400");
 }
 
+// Balasan template saat Claude tidak bisa dipakai (saldo API habis, gangguan, dsb), supaya pengunjung
+// tetap diarahkan ke WhatsApp dan tidak hilang. Topik ditebak dari kata kunci pesan terakhir.
+const FALLBACK_TOPICS = [
+  ["survey", /survey|kunjung|lihat lokasi|datang|jadwal|jam buka|buka jam/],
+  ["booking", /booking|utj|tanda jadi|pesan unit|beli/],
+  ["kpr", /kpr|cicil|angsur|bunga|tenor|bank|dp\b/],
+  ["harga", /harga|berapa|pricelist|price list|ratecard|rate card|biaya|nego|diskon/],
+  ["unit", /unit|stok|stock|ready|indent|tersedia|kapan jadi|serah terima/],
+  ["promo", /promo|diskon|hadiah|gratis|octoboo/],
+  ["legalitas", /sertifikat|shm|shgb|hgb|legal|imb|pbg|izin/],
+  ["orang", /admin|marketing|orang|telepon|telpon|hubungi|komplain/],
+];
+const FALLBACK_ASK = {
+  harga: "Kalau mau tahu harga lengkapnya, chat Ajeng lewat WhatsApp aja ya Kak, biar enak aku kirimin dokumen PDF-nya.",
+  survey: "Chat Ajeng lewat WhatsApp aja ya Kak, nanti aku bantu atur jadwal survey-nya.",
+  kpr: "Chat Ajeng lewat WhatsApp aja ya Kak, nanti aku bantu hitungin simulasi cicilannya.",
+  booking: "Chat Ajeng lewat WhatsApp aja ya Kak, nanti aku pandu proses booking-nya.",
+  unit: "Chat Ajeng lewat WhatsApp aja ya Kak, biar aku cekkan unit yang masih tersedia.",
+  promo: "Chat Ajeng lewat WhatsApp aja ya Kak, nanti aku jelasin promo yang lagi berjalan.",
+  legalitas: "Chat Ajeng lewat WhatsApp aja ya Kak, biar enak aku kirimin penjelasan dan dokumennya.",
+  orang: "Chat Ajeng lewat WhatsApp aja ya Kak, biar langsung terhubung dengan tim.",
+  umum: "Chat Ajeng lewat WhatsApp aja ya Kak, biar tetap aku bantu dan enak kirim dokumennya.",
+};
+function fallbackReply(messages) {
+  const last = String((messages[messages.length - 1] || {}).content || "").toLowerCase();
+  const topic = (FALLBACK_TOPICS.find(([, re]) => re.test(last)) || ["umum"])[0];
+  return `Aduh, Ajeng lagi ada kendala teknis nih Kak, jadi belum bisa jawab di sini.\n\n${FALLBACK_ASK[topic]} [[WA:${topic}]]`;
+}
+
 export default async function handler(req, res) {
   applyCors(req, res);
   if (req.method === "OPTIONS") return res.status(204).end(); // preflight dari browser
@@ -378,9 +407,8 @@ export default async function handler(req, res) {
     for (let i = 0; ; i++) {
       if (!r.ok) {
         console.error("Anthropic API error", r.status, await r.text());
-        return res
-          .status(502)
-          .json({ error: "Maaf, layanan sedang sibuk. Coba lagi sebentar." });
+        res.setHeader("X-Fallback", "api-error");
+        return res.status(200).json({ reply: fallbackReply(messages) });
       }
       data = await r.json();
       searches += (data.content || []).filter((b) => b.type === "server_tool_use" && b.name === "web_search").length;
@@ -414,8 +442,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ reply: reply || "Maaf, tidak ada jawaban." });
   } catch (err) {
     console.error(err);
-    return res
-      .status(500)
-      .json({ error: "Terjadi kesalahan. Coba lagi sebentar." });
+    res.setHeader("X-Fallback", "exception");
+    return res.status(200).json({ reply: fallbackReply(messages) });
   }
 }

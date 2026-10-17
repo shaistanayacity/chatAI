@@ -54,3 +54,9 @@ Bot punya alat pencarian web dan pembaca halaman `shaistanayacity.com` (Claude A
 Bot menutup jawaban berbobot dengan penanda `[[WA:topik]]` (atau `[[WA:topik:Tipe]]`, misalnya `[[WA:survey:Montana]]`). Widget mengubahnya jadi tombol WhatsApp dengan pesan yang sudah terisi dan diawali `[Website Shaistanaya]`, supaya admin tahu asalnya dan langsung tahu harus apa.
 
 Topik: `survey`, `harga`, `kpr`, `booking`, `unit`, `promo`, `legalitas`, `orang`, dan `umum` (bawaan). Template dan label tombol ada di `WA_TOPICS` di `widget.js`; kapan bot memilih topik diatur di bagian TOMBOL WHATSAPP pada `api/chat.js`.
+
+## Kalau saldo API habis atau Claude gangguan
+
+Backend tidak menampilkan error ke pengunjung. Ia membalas dengan template ramah dari Ajeng ("lagi ada kendala teknis") plus tombol WhatsApp sesuai topik pertanyaan (harga, survey, KPR, booking, unit, promo, legalitas, orang, atau umum, ditebak dari kata kunci). Template ada di `FALLBACK_ASK` dan kata kuncinya di `FALLBACK_TOPICS` pada `api/chat.js`. Header respons `X-Fallback` bernilai `api-error` atau `exception` saat ini terjadi (lihat di tab Network).
+
+Agar tidak sampai terjadi: nyalakan Auto-reload dan notifikasi saldo rendah di console.anthropic.com → Billing.
