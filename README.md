@@ -6,7 +6,7 @@ Chatbot Shaistanaya City (Vercel serverless + API Claude + knowledge base di Sup
 - `api/chat.js`: backend. Mengambil entri knowledge base yang relevan dari Supabase, lalu memanggil API Claude.
 - `widget.js`: widget chat yang mandiri (Shadow DOM), dipasang di website lewat satu baris skrip.
 - `index.html`: halaman contoh yang memuat `widget.js`.
-- `ajeng.jpg`: foto profil di header widget.
+- `naya.png`: foto profil di header widget.
 - `supabase/001_chatbot_kb.sql`: skema tabel `chatbot_kb` dan fungsi pencarian.
 - `supabase/seed_kb.sql`: isi awal knowledge base (dari PDF 100 FAQ).
 
@@ -29,7 +29,7 @@ Tempel satu baris ini sebelum `</body>` di website (atau di kolom "custom code /
 
 - Ganti `chatai-two-gules.vercel.app` dengan domain chatbot di Vercel (misalnya domain khusus seperti `chat.shaistanayacity.com`).
 - Domain website yang diizinkan memanggil API ada di env var `ALLOWED_ORIGINS` (dipisah koma, bawaan `https://shaistanayacity.com,https://www.shaistanayacity.com`). Tambahkan domain lain, misalnya domain staging, lalu Redeploy.
-- Sekitar 2,5 detik setelah halaman terbuka muncul gelembung sapaan kecil dari Ajeng di atas tombol chat ("Halo, saya Ajeng 👋 Ada yang bisa dibantu?"). Gelembung hilang saat diklik, ditutup (✕), atau chat dibuka, dan tidak muncul lagi selama sesi browser yang sama. Teksnya ada di `widget.js` (cari `chat-teaser`).
+- Sekitar 2,5 detik setelah halaman terbuka muncul gelembung sapaan kecil dari Naya di atas tombol chat ("Halo, saya Naya 👋 Ada yang bisa dibantu?"). Gelembung hilang saat diklik, ditutup (✕), atau chat dibuka, dan tidak muncul lagi selama sesi browser yang sama. Teksnya ada di `widget.js` (cari `chat-teaser`).
 - Tampilan widget diisolasi dengan Shadow DOM sehingga tidak bentrok dengan CSS website.
 - Jika website memakai Content-Security-Policy, izinkan domain chatbot di `script-src`, `connect-src`, dan `img-src`.
 
@@ -57,6 +57,6 @@ Topik: `survey`, `harga`, `kpr`, `booking`, `unit`, `promo`, `legalitas`, `orang
 
 ## Kalau saldo API habis atau Claude gangguan
 
-Backend tidak menampilkan error ke pengunjung. Ia membalas dengan template ramah dari Ajeng ("lagi ada kendala teknis") plus tombol WhatsApp sesuai topik pertanyaan (harga, survey, KPR, booking, unit, promo, legalitas, orang, atau umum, ditebak dari kata kunci). Template ada di `FALLBACK_ASK` dan kata kuncinya di `FALLBACK_TOPICS` pada `api/chat.js`. Header respons `X-Fallback` bernilai `api-error` atau `exception` saat ini terjadi (lihat di tab Network).
+Backend tidak menampilkan error ke pengunjung. Ia membalas dengan template ramah dari Naya ("lagi ada kendala teknis") plus tombol WhatsApp sesuai topik pertanyaan (harga, survey, KPR, booking, unit, promo, legalitas, orang, atau umum, ditebak dari kata kunci). Template ada di `FALLBACK_ASK` dan kata kuncinya di `FALLBACK_TOPICS` pada `api/chat.js`. Header respons `X-Fallback` bernilai `api-error` atau `exception` saat ini terjadi (lihat di tab Network).
 
 Agar tidak sampai terjadi: nyalakan Auto-reload dan notifikasi saldo rendah di console.anthropic.com → Billing.
