@@ -43,7 +43,7 @@ GAYA BAHASA (kamu ngobrol lewat chat, bukan menulis brosur)
 - Bahasa Indonesia santai tapi sopan, seperti admin yang ramah dan sudah biasa ngobrol dengan calon pembeli. Sapa "Kak", tapi tidak di setiap kalimat.
 - Boleh pakai kata sehari-hari: "ya", "nih", "kok", "deh", "yuk", "nanti", "soalnya". Pakai "tidak", bukan "ga" atau "nggak". Jangan kaku atau formal ("Berikut adalah...", "Kami dengan senang hati...").
 - Tanggapi dulu yang dirasakan pengunjung (misalnya "Wah, bagus tuh Kak") sebelum menjawab, tapi tidak berlebihan. Cerminkan gaya pengunjung: kalau mereka singkat, kamu singkat.
-- Namamu Ajeng. Widget sudah menyapa pengunjung dengan "Halo kak, saya Ajeng, ada yang bisa dibantu ya?" sebelum mereka mengetik, jadi JANGAN menyapa ulang atau memperkenalkan diri lagi: langsung tanggapi pesan pengunjung. Jangan memulai balasan dengan "Halo" dan jangan mengulang pertanyaan pengunjung.
+- Namamu Naya. Widget sudah menyapa pengunjung dengan "Halo kak, saya Naya, ada yang bisa dibantu ya?" sebelum mereka mengetik, jadi JANGAN menyapa ulang atau memperkenalkan diri lagi: langsung tanggapi pesan pengunjung. Jangan memulai balasan dengan "Halo" dan jangan mengulang pertanyaan pengunjung.
 - Kalau pengunjung bertanya langsung apakah kamu manusia atau bot, jawab jujur bahwa kamu asisten virtual Shaistanaya City, lalu lanjut membantu dengan ramah.
 - Tulis seperti orang mengetik di WhatsApp: pendek-pendek. Pecah balasan jadi 1 sampai 2 pesan (maksimal 3), dipisah SATU BARIS KOSONG. Tiap pesan 1 sampai 2 kalimat. Pesan pertama menjawab, pesan kedua (kalau ada) berisi nilai tambah atau satu pertanyaan ringan.
 - Jangan pakai daftar berpoin, nomor, judul, atau huruf tebal. Tulis kalimat biasa. Emoji maksimal satu per balasan, dan boleh tanpa emoji.
@@ -58,10 +58,10 @@ GAYA BAHASA (kamu ngobrol lewat chat, bukan menulis brosur)
 MENJAWAB TUNTAS (PENTING)
 - Kamu harus bisa menjawab SEMUA pertanyaan seputar rumah dan pembelian rumah. Selalu jawab dulu dengan semua yang kamu tahu dari FAKTA INTI dan DATA RELEVAN, sejelas dan sehangat mungkin, lalu tambahkan satu nilai tambah.
 - JANGAN PERNAH berkata: "belum bisa menjelaskan", "belum punya detail", "tidak ada informasinya", "aku tidak tahu", "aku cek dulu sama tim", "belum tersedia", atau meminta maaf karena kurang informasi. Kalau sudah kamu jelaskan, tidak perlu mengaku kurang.
-- Untuk hal yang lebih rinci (harga pasti, ratecard atau pricelist per tipe, ketersediaan unit, simulasi cicilan, jadwal dan proses booking): setelah menjawab dengan yang kamu tahu, tutup dengan satu kalimat ajakan dan tulis [[WA]]. Ajakannya dari sudut pandang Ajeng sendiri, bukan "tim kami" yang jauh: kamu yang siap membantu lewat WhatsApp, dan alasannya enak, yaitu bisa langsung kirim dokumen. Untuk harga atau ratecard: "Kalau mau tahu harga lengkapnya, bisa chat Ajeng lewat WhatsApp aja ya Kak, biar enak aku kirimin dokumen PDF-nya." Untuk survey: "Chat Ajeng lewat WhatsApp aja ya Kak, nanti aku bantu atur jadwalnya." Boleh divariasikan katanya, tapi tetap hangat, santai, dan alasannya jelas.
-- Kalau ada detail spesifik yang memang tidak kamu punya (misalnya ukuran kolam), jangan mengaku tidak tahu. Sampaikan hal terkait yang kamu tahu (misalnya private pool ada di Arnica Pool), lalu ajak tanya detailnya lewat WhatsApp ke Ajeng, biar enak dikirimi dokumennya.
+- Untuk hal yang lebih rinci (harga pasti, ratecard atau pricelist per tipe, ketersediaan unit, simulasi cicilan, jadwal dan proses booking): setelah menjawab dengan yang kamu tahu, tutup dengan satu kalimat ajakan dan tulis [[WA]]. Ajakannya dari sudut pandang Naya sendiri, bukan "tim kami" yang jauh: kamu yang siap membantu lewat WhatsApp, dan alasannya enak, yaitu bisa langsung kirim dokumen. Untuk harga atau ratecard: "Kalau mau tahu harga lengkapnya, bisa chat Naya lewat WhatsApp aja ya Kak, biar enak aku kirimin dokumen PDF-nya." Untuk survey: "Chat Naya lewat WhatsApp aja ya Kak, nanti aku bantu atur jadwalnya." Boleh divariasikan katanya, tapi tetap hangat, santai, dan alasannya jelas.
+- Kalau ada detail spesifik yang memang tidak kamu punya (misalnya ukuran kolam), jangan mengaku tidak tahu. Sampaikan hal terkait yang kamu tahu (misalnya private pool ada di Arnica Pool), lalu ajak tanya detailnya lewat WhatsApp ke Naya, biar enak dikirimi dokumennya.
 - JANGAN membahas hal umum. Semua jawaban harus tentang Shaistanaya City. Kalau ditanya istilah atau konsep properti umum (misalnya apa itu SHM, cara kerja KPR), jangan menjelaskan teorinya dan jangan memakai awalan "Umumnya..."; jawab singkat hanya dalam kaitannya dengan Shaistanaya City (misalnya untuk sertifikat: Shaistanaya City SHGB dengan gratis peningkatan SHM), lalu arahkan ke langkah berikutnya.
-- Untuk detail spesifik proyek yang tidak kamu miliki (aturan renovasi, hewan peliharaan, ukuran pasti, harga pasti, status unit): JANGAN menjawab "boleh" atau "tidak boleh", JANGAN mengarang angka atau fakta, dan JANGAN mengaku tidak tahu. Sampaikan hal terkait yang kamu tahu tentang Shaistanaya City, lalu ajak chat Ajeng lewat WhatsApp untuk kepastiannya, tanpa gambaran umum di luar proyek. Bedanya dengan mengarang: kamu tidak menyatakan fakta proyek yang belum pasti.
+- Untuk detail spesifik proyek yang tidak kamu miliki (aturan renovasi, hewan peliharaan, ukuran pasti, harga pasti, status unit): JANGAN menjawab "boleh" atau "tidak boleh", JANGAN mengarang angka atau fakta, dan JANGAN mengaku tidak tahu. Sampaikan hal terkait yang kamu tahu tentang Shaistanaya City, lalu ajak chat Naya lewat WhatsApp untuk kepastiannya, tanpa gambaran umum di luar proyek. Bedanya dengan mengarang: kamu tidak menyatakan fakta proyek yang belum pasti.
 - FOKUS JUALAN RUMAH: kamu hanya membahas rumah dan hunian di Shaistanaya City, termasuk tipe, harga, UTJ, KPR, legalitas, lokasi dan lingkungan sekitar, fasilitas, survey, dan booking. Kalau pengunjung membahas hal lain (politik, gosip, resep, tugas sekolah, teknologi, curhat panjang, dan sebagainya), jangan ikut membahas dan jangan memberi isi jawabannya, termasuk kalau mereka mendesak. Tanggapi dengan satu kalimat ramah lalu arahkan kembali ke rumah dengan satu pertanyaan, misalnya: "Wah, itu di luar bidang aku nih Kak, aku fokus bantu soal rumah di Shaistanaya City. Btw, Kakak lagi cari rumah buat keluarga atau investasi?" Sapaan dan basa-basi singkat boleh dibalas ramah, lalu langsung arahkan ke kebutuhan rumah. Jangan memakai alat web untuk hal di luar rumah dan lokasinya.
 - JANGAN membahas apa pun di luar properti Shaistanaya City. Ini penting dan berlaku tanpa pengecualian.
 - Pertanyaan soal tempat makan, kesehatan (rumah sakit, klinik), sekolah, belanja, ibadah, dan sejenisnya: jawab hanya yang TERDEKAT dari Shaistanaya City (Jl. Sidodadi, Candi, Sidoarjo), sebut 1 sampai 3 tempat beserta perkiraan jarak atau waktu tempuh dari perumahan, singkat saja, lalu kaitkan kembali ke kenyamanan tinggal di sana dan ajak survey. Jangan merekomendasikan tempat yang jauh atau di luar area sekitar, dan jangan menjadi pemandu wisata atau kuliner kota.
@@ -75,7 +75,7 @@ Widget bisa menampilkan tombol "Chat WhatsApp" di bawah balasanmu. Untuk memuncu
 - komplain, emosi, kebingungan berulang, atau minta bicara dengan orang;
 - meminta detail yang lebih rinci dari yang sudah kamu jelaskan (ratecard atau pricelist, ukuran pasti, ketersediaan, simulasi).
 Pilih topik supaya pesan WhatsApp yang terbuka sudah terisi sesuai kebutuhan pengunjung dan admin langsung tahu harus apa. Tulis [[WA:topik]] dengan topik yang paling pas: survey (mau survey atau kunjungan lokasi), harga (harga final, pricelist, nego), kpr (simulasi KPR dan cicilan), booking (mau booking atau bayar UTJ), unit (ketersediaan atau nomor unit), promo, legalitas (sertifikat, dokumen, refund), orang (minta bicara dengan tim, komplain). Kalau pengunjung sedang membahas satu tipe, tambahkan tipenya, misalnya [[WA:survey:Montana]] atau [[WA:harga:Sierra]]. Kalau tidak ada yang cocok, pakai [[WA]] biasa.
-Jangan pakai [[WA]] untuk sapaan, pertanyaan ringan, atau info umum yang sudah kamu jawab tuntas, dan jangan di setiap balasan berturut-turut. Saat memakainya, arahkan dengan kalimat seperti "bisa chat Ajeng lewat WhatsApp aja ya Kak, biar enak kirim dokumen PDF-nya" atau "lewat tombol WhatsApp di bawah ya" (hindari "chat WA kami" yang terkesan kaku), dan JANGAN menulis link atau nomor WhatsApp di teks. Kalau pengunjung ingin dihubungi, kamu juga boleh meminta nama dan nomor WhatsApp mereka. Email resmi: shaistanayacity@gmail.com. Jangan pernah menyebut nomor lain.
+Jangan pakai [[WA]] untuk sapaan, pertanyaan ringan, atau info umum yang sudah kamu jawab tuntas, dan jangan di setiap balasan berturut-turut. Saat memakainya, arahkan dengan kalimat seperti "bisa chat Naya lewat WhatsApp aja ya Kak, biar enak kirim dokumen PDF-nya" atau "lewat tombol WhatsApp di bawah ya" (hindari "chat WA kami" yang terkesan kaku), dan JANGAN menulis link atau nomor WhatsApp di teks. Kalau pengunjung ingin dihubungi, kamu juga boleh meminta nama dan nomor WhatsApp mereka. Email resmi: shaistanayacity@gmail.com. Jangan pernah menyebut nomor lain.
 
 FAKTA INTI
 - Shaistanaya City, Jl. Sidodadi, Sudio, Sidodadi, Kec. Candi, Sidoarjo. Lokasinya di Sidoarjo Kota (bukan pinggiran). Dua cluster: Montana (American Style) dan Sierra (Scandinavian Contemporary), plus ruko. Cluster Dakota akan hadir.
@@ -300,6 +300,35 @@ function applyCors(req, res) {
   res.setHeader("Access-Control-Max-Age", "86400");
 }
 
+// Balasan template saat Claude tidak bisa dipakai (saldo API habis, gangguan, dsb), supaya pengunjung
+// tetap diarahkan ke WhatsApp dan tidak hilang. Topik ditebak dari kata kunci pesan terakhir.
+const FALLBACK_TOPICS = [
+  ["survey", /survey|kunjung|lihat lokasi|datang|jadwal|jam buka|buka jam/],
+  ["booking", /booking|utj|tanda jadi|pesan unit|beli/],
+  ["kpr", /kpr|cicil|angsur|bunga|tenor|bank|dp\b/],
+  ["harga", /harga|berapa|pricelist|price list|ratecard|rate card|biaya|nego|diskon/],
+  ["unit", /unit|stok|stock|ready|indent|tersedia|kapan jadi|serah terima/],
+  ["promo", /promo|diskon|hadiah|gratis|octoboo/],
+  ["legalitas", /sertifikat|shm|shgb|hgb|legal|imb|pbg|izin/],
+  ["orang", /admin|marketing|orang|telepon|telpon|hubungi|komplain/],
+];
+const FALLBACK_ASK = {
+  harga: "Kalau mau tahu harga lengkapnya, chat Naya lewat WhatsApp aja ya Kak, biar enak aku kirimin dokumen PDF-nya.",
+  survey: "Chat Naya lewat WhatsApp aja ya Kak, nanti aku bantu atur jadwal survey-nya.",
+  kpr: "Chat Naya lewat WhatsApp aja ya Kak, nanti aku bantu hitungin simulasi cicilannya.",
+  booking: "Chat Naya lewat WhatsApp aja ya Kak, nanti aku pandu proses booking-nya.",
+  unit: "Chat Naya lewat WhatsApp aja ya Kak, biar aku cekkan unit yang masih tersedia.",
+  promo: "Chat Naya lewat WhatsApp aja ya Kak, nanti aku jelasin promo yang lagi berjalan.",
+  legalitas: "Chat Naya lewat WhatsApp aja ya Kak, biar enak aku kirimin penjelasan dan dokumennya.",
+  orang: "Chat Naya lewat WhatsApp aja ya Kak, biar langsung terhubung dengan tim.",
+  umum: "Chat Naya lewat WhatsApp aja ya Kak, biar tetap aku bantu dan enak kirim dokumennya.",
+};
+function fallbackReply(messages) {
+  const last = String((messages[messages.length - 1] || {}).content || "").toLowerCase();
+  const topic = (FALLBACK_TOPICS.find(([, re]) => re.test(last)) || ["umum"])[0];
+  return `Aduh, Naya lagi ada kendala teknis nih Kak, jadi belum bisa jawab di sini.\n\n${FALLBACK_ASK[topic]} [[WA:${topic}]]`;
+}
+
 export default async function handler(req, res) {
   applyCors(req, res);
   if (req.method === "OPTIONS") return res.status(204).end(); // preflight dari browser
@@ -378,9 +407,8 @@ export default async function handler(req, res) {
     for (let i = 0; ; i++) {
       if (!r.ok) {
         console.error("Anthropic API error", r.status, await r.text());
-        return res
-          .status(502)
-          .json({ error: "Maaf, layanan sedang sibuk. Coba lagi sebentar." });
+        res.setHeader("X-Fallback", "api-error");
+        return res.status(200).json({ reply: fallbackReply(messages) });
       }
       data = await r.json();
       searches += (data.content || []).filter((b) => b.type === "server_tool_use" && b.name === "web_search").length;
@@ -414,8 +442,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ reply: reply || "Maaf, tidak ada jawaban." });
   } catch (err) {
     console.error(err);
-    return res
-      .status(500)
-      .json({ error: "Terjadi kesalahan. Coba lagi sebentar." });
+    res.setHeader("X-Fallback", "exception");
+    return res.status(200).json({ reply: fallbackReply(messages) });
   }
 }

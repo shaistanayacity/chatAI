@@ -1,5 +1,5 @@
 /*
- * Widget chat Shaistanaya City (Ajeng).
+ * Widget chat Shaistanaya City (Naya).
  * Pasang di website dengan satu baris, sebelum </body>:
  *   <script src="https://DOMAIN-CHATBOT/widget.js" defer></script>
  * Opsional: data-api="https://DOMAIN-CHATBOT/api/chat" untuk alamat API khusus.
@@ -140,8 +140,8 @@
   var HTML = `<button id="chat-toggle" aria-label="Buka chat">💬<span id="chat-badge" aria-hidden="true">1</span></button>
 <div id="chat-box" role="dialog" aria-label="Chat Shaistanaya City">
   <div id="chat-head">
-    <div id="avatar"><img src="${ORIGIN}/ajeng.jpg" alt="Ajeng" width="44" height="44" onerror="this.remove()"><span aria-hidden="true">A</span></div>
-    <div id="who"><b>Ajeng</b><span>Online</span></div>
+    <div id="avatar"><img src="${ORIGIN}/naya.png" alt="Naya" width="44" height="44" onerror="this.remove()"><span aria-hidden="true">N</span></div>
+    <div id="who"><b>Naya</b><span>Online</span></div>
     <button id="chat-new" class="hbtn" type="button">Sesi baru</button>
     <button id="chat-close" class="hbtn" type="button" aria-label="Tutup chat">✕</button>
   </div>
@@ -162,8 +162,8 @@
     <button id="chat-btn" type="button" aria-label="Bicara"></button>
   </form>
 </div>
-<div id="chat-teaser" role="button" tabindex="0" aria-label="Buka chat dengan Ajeng">
-  <div><b>Halo, saya Ajeng 👋</b><span>Ada yang bisa dibantu?</span></div>
+<div id="chat-teaser" role="button" tabindex="0" aria-label="Buka chat dengan Naya">
+  <div><b>Halo, saya Naya 👋</b><span>Ada yang bisa dibantu?</span></div>
   <button id="teaser-close" type="button" aria-label="Tutup sapaan">✕</button>
 </div>`;
 
@@ -207,8 +207,8 @@
       const ICON_MIC = '<svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2z"/></svg>';
       const ICON_SEND = '<svg viewBox="0 0 24 24"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12 2-12 2z"/></svg>';
 
-      // Sapaan pembuka dari Ajeng (hanya tampil di widget, tidak dikirim ke server sebagai riwayat).
-      const GREETING = "Halo kak, saya Ajeng, ada yang bisa dibantu ya?";
+      // Sapaan pembuka dari Naya (hanya tampil di widget, tidak dikirim ke server sebagai riwayat).
+      const GREETING = "Halo kak, saya Naya, ada yang bisa dibantu ya?";
       let greeted = false;
       async function greet() {
         if (greeted) return;
