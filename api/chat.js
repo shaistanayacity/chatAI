@@ -37,6 +37,17 @@ const LIMIT_GLOBAL_PER_DAY = 3000; // pengaman total biaya per hari
 const WEB_LIMIT_PER_IP_DAY = Number(process.env.WEB_LIMIT_PER_IP_DAY) || 5;
 const WEB_LIMIT_GLOBAL_DAY = Number(process.env.WEB_LIMIT_GLOBAL_DAY) || 10;
 
+// Promo bergulir otomatis: mulai 1 November 2026 pukul 00.00 WIB, nama dan tanggal akhir promo di prompt
+// dan data KB (yang masih tertulis Octoboo, 31 Oktober 2026) diganti ke Promo November. Isi promo sama.
+const PROMO_SWITCH_AT = Date.UTC(2026, 9, 31, 17, 0, 0); // 1 Nov 2026 00.00 WIB
+function promoNow(text) {
+  if (Date.now() < PROMO_SWITCH_AT) return text;
+  return text
+    .replace(/Octoboo/g, "November")
+    .replace(/31 Oktober 2026/g, "30 November 2026")
+    .replace(/Spooky Discount/g, "Diskon Spesial");
+}
+
 const SYSTEM_PROMPT = `Kamu adalah asisten virtual Shaistanaya City (tagline: Cozy Urban Living), perumahan modern di pusat Kota Sidoarjo. Tugasmu membantu calon pembeli dan mengarahkan mereka ke survey atau tim marketing.
 
 GAYA BAHASA (kamu ngobrol lewat chat, bukan menulis brosur)
@@ -308,7 +319,7 @@ const FALLBACK_TOPICS = [
   ["kpr", /kpr|cicil|angsur|bunga|tenor|bank|dp\b/],
   ["harga", /harga|berapa|pricelist|price list|ratecard|rate card|biaya|nego|diskon/],
   ["unit", /unit|stok|stock|ready|indent|tersedia|kapan jadi|serah terima/],
-  ["promo", /promo|diskon|hadiah|gratis|octoboo/],
+  ["promo", /promo|diskon|hadiah|gratis|octoboo|november/],
   ["legalitas", /sertifikat|shm|shgb|hgb|legal|imb|pbg|izin/],
   ["orang", /admin|marketing|orang|telepon|telpon|hubungi|komplain/],
 ];
@@ -355,10 +366,10 @@ export default async function handler(req, res) {
   const { text: knowledge, status: kbStatus } = await retrieveKnowledge(messages);
   res.setHeader("X-KB-Status", kbStatus); // untuk diagnosis: lihat di tab Network browser
   const system = [
-    { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
+    { type: "text", text: promoNow(SYSTEM_PROMPT), cache_control: { type: "ephemeral" } },
   ];
   if (knowledge) {
-    system.push({ type: "text", text: `DATA RELEVAN UNTUK PERTANYAAN INI:\n\n${knowledge}` });
+    system.push({ type: "text", text: promoNow(`DATA RELEVAN UNTUK PERTANYAAN INI:\n\n${knowledge}`) });
   }
 
   try {

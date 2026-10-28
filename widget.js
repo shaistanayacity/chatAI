@@ -150,7 +150,7 @@
     <div id="hello">
       <div class="chips">
         <button class="chip" type="button">Tipe rumah</button>
-        <button class="chip" type="button">Promo Octoboo</button>
+        <button class="chip" type="button">${Date.now() >= Date.UTC(2026, 9, 31, 17, 0, 0) ? "Promo November" : "Promo Octoboo"}</button>
         <button class="chip" type="button">Lokasi &amp; akses</button>
         <button class="chip" type="button">Bisa KPR?</button>
         <button class="chip" type="button">Jadwalkan survey</button>

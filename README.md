@@ -60,3 +60,7 @@ Topik: `survey`, `harga`, `kpr`, `booking`, `unit`, `promo`, `legalitas`, `orang
 Backend tidak menampilkan error ke pengunjung. Ia membalas dengan template ramah dari Naya ("lagi ada kendala teknis") plus tombol WhatsApp sesuai topik pertanyaan (harga, survey, KPR, booking, unit, promo, legalitas, orang, atau umum, ditebak dari kata kunci). Template ada di `FALLBACK_ASK` dan kata kuncinya di `FALLBACK_TOPICS` pada `api/chat.js`. Header respons `X-Fallback` bernilai `api-error` atau `exception` saat ini terjadi (lihat di tab Network).
 
 Agar tidak sampai terjadi: nyalakan Auto-reload dan notifikasi saldo rendah di console.anthropic.com → Billing.
+
+## Promo bergulir otomatis (Oktober ke November)
+
+Mulai 1 November 2026 pukul 00.00 WIB, backend mengganti nama dan tanggal akhir promo secara otomatis: "Octoboo" menjadi "November", "31 Oktober 2026" menjadi "30 November 2026", dan "Spooky Discount" menjadi "Diskon Spesial". Penggantian ini berlaku di prompt dan di data KB yang diambil, jadi isi KB tidak perlu diubah. Chip "Promo Octoboo" di widget ikut berganti menjadi "Promo November". Aturannya ada di `promoNow` dan `PROMO_SWITCH_AT` pada `api/chat.js`. Kalau isi promo November berbeda dari Oktober, ubah data KB-nya.
